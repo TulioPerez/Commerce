@@ -1,0 +1,53 @@
+TODO's
+
++ Create at least 3 models: 
+    auction listing
+    bids
+    comments
+
++ Page: watchlist for logged in user
+    if clicked on item:
+        go to listings page:
+            all listings
+            watchlist
+            category list
+            category item list
+
++ page: Category
+    if category clicked:
+        go to all listings for category
+
++ "Create listing" page available for regisgtered / logged in users
+
++ "Active listings" page" default route for site
+
++ "Listing" page: 
+    details about a single listing showing current bid
+    if user logged in, they can add it to their "watchlist"
+    if item is already in watchlist, user can remove it
+    if logged in, user can bid on item that is not theirs
+        bid must be at least as much as starting bid 
+        additional bids should be greater than current bid
+            else error message
+
+    if logged in & user created the listing: 
+        ability to "close" the auction
+        current (highest) bid, if any, is the winner of the auction
+            listing is no longer available (archive?)
+
+    if logged in, visiting a closed auction:
+        if user won the auction:
+            message "congratulations" message
+        else: this auction is closed
+
+    if logged in:
+        user can add comments within listing page
+        user can see all comments 
+
++ Django Admin Interface:
+    site admin can view, add, edit and delete: 
+        any listings, comments, bids
+
++ create CSS styles
+
++ search & resolve "todo" items

@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Listing Detail</h2>
+
+    <div>
+        {% if user.is_authenticated %}
+        {% endif %}
+
+        {% if user.is_seller %}
+        {% endif %}
+
+        {% if user.is_bidder %}
+        {% endif %}
+
+        {% if listing_is_watchlisted %}
+        {% endif %}
+    </div>
+{% endblock %}

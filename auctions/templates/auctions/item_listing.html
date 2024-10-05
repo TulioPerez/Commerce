@@ -10,10 +10,10 @@
         {% if user.is_seller %}
         {% endif %}
 
-        {% if user.is_bidder %}
+        {% if listing_is_watchlisted %}
         {% endif %}
 
-        {% if listing_is_watchlisted %}
+        {% if user.is_bidder %}
         {% endif %}
     </div>
 {% endblock %}

@@ -17,21 +17,36 @@
             {% endif %}
         </div>
         <ul class="nav">
+            <!-- always show the following menu items -->
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
             </li>
-            <!-- ALter menu items based on login status -->
+            <li>
+                <a class="nav-link" href="{% url 'index' %}">Categories</a>
+            </li>
+            <!-- show menu items for registered users -->
             {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle">My Account</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'index' %}">My Bids</a></li>
-                            <li><a class="dropdown-item" href="{% url 'index' %}">Watchlist</a></li>
-                            <li><a class="dropdown-item" href="{% url 'index' %}">My Purchases</a></li>
-                            <li><a class="dropdown-item" href="{% url 'index' %}">My Listings</a></li>
-                            <li><a class="dropdown-item" href="{% url 'index' %}">Sell</a></li>
-                            <li><a class="dropdown-item" href="{% url 'index' %}">Categories</a></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'index' %}">My Bids</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'index' %}">Watchlist</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'index' %}">My Purchases</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'index' %}">My Listings</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'index' %}">Sell</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                            </li>
                         </ul>
                 </li>
             {% else %}

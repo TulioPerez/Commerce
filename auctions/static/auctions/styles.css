@@ -44,6 +44,27 @@ body {
   .dropdown-menu li a:hover {
     background-color: #e9ecef;
   }
+
+  #listing_block {
+    margin: 20px;
+    /* margin: 20px 20px; */
+  }
+
+  #listing_category {
+    margin-left: 0px;
+  }
+  
+  #listing_title {
+    margin-left: 20px;
+  }
+
+  #listing_description {
+    margin-left: 20px;
+  }
+
+  #listing_price {
+    margin-left: 20px;
+  }
   
   
   /* .dropdown-menu li a {

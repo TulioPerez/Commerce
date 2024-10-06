@@ -24,7 +24,7 @@ class Auction_Listing(models.Model):
     description = models.TextField()
     # if Category or Category or Bid is deleted, do not proceed as long as a listing exists for them
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="listings")
-    current_bid = models.ForeignKey("Bid", on_delete=models.PROTECT, related_name="listing")
+    current_bid = models.ForeignKey("Bid", on_delete=models.PROTECT, related_name="listings", null=True, blank=True)
     # if User is deleted, delete related auction_listings 
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     quantity = models.IntegerField()
@@ -41,6 +41,9 @@ class Auction_Listing(models.Model):
     # returns True when auction has expired
     def has_ended(self):
         return not self.is_open or timezone.now() >= self.closing_date
+
+    def __str__(self):
+        return f"{self.id}: Title: {self.title}"
 
 
 class Bid(models.Model):

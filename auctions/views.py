@@ -4,7 +4,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Auction_Listing, Bid, Category, Comment
+
+
+def index(request):
+    categories = Category.objects.all() 
+    return render(request, "auctions/index.html", {
+        "listings":Auction_Listing.objects.all(),
+    })
 
 
 def register(request):
@@ -61,21 +68,19 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def index(request):
-    return render(request, "auctions/index.html")
-
-
 def item_listing(request, is_user_listing):
     # is_mine if the user created this listing
     return render(request, "item_listing.html")
 
 
-def listings(request):
-    return render(request, "listings.html")
+# def listings(request):
+#     return render(request, "listings.html")
     
 
-def categories(request):
-    pass
+def category(request):
+    return render(request, "auctions/category.html", {
+        "category":Category.objects.all(),
+    })
 
 
 def my_bids(request):

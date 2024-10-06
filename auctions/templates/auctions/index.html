@@ -2,8 +2,32 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
     <!-- todo add \\ message div as in login / register if not logged in, and grey out "bid" button if available-->
+     <!-- "login or register to place a bid!"  -->
+    <ul>
+        {% for listing in listings %}
+        <!-- todo should be for category in category, then for listing in listings -->
+        <li>
+            <div id="listing_block">
+                <!-- link for category list -->
+                <a id="listing_category" href="{% url 'category' listing.category.id %}">
+                    {{ listing.category.title }} >> 
+                </a>
 
-    TODO
+                <!-- link for item's detail page -->
+                <div id="listing_title">
+                    <a href="{% url 'item_listing' listing.id %}">
+                        {{ listing.title }}
+                    </a>
+                </div>
+
+                <div id="listing_price">
+                    {{ listing.price }}
+                </div> 
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
+
+<!-- <li><a href="/encyclopedia/entries/{{ entry }}">{{ entry }}</a></li> -->

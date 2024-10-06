@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    <!-- todo add \\ message div as in login / register if not logged in, and grey out "bid" button if available-->
+     <!-- "login or register to place a bid!"  -->
+    <ul>
+        {% for category in categories %}
+        <li>
+            <div id="listing_block">
+                <!-- link for category list -->
+                <a href="{% url 'category' listing.category %}">{{ category.title }}</a>
+                <!-- link to item description page -->
+                <a href="{% url 'item_listing' listing.id %}">{{ listing.title }}</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+<!-- <li><a href="/encyclopedia/entries/{{ entry }}">{{ entry }}</a></li> -->

@@ -71,12 +71,27 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
+def watchlist(request):
+    if request.user.is_authenticated:
+        watchlist = request.user.watchlist.all()
+    else:
+        watchlist = []
+    print("Watchlist items:", [item.title for item in watchlist])
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": watchlist,
+        "message": "No items in watchlist."
+    })
+
+
+
 def listing_detail(request, listing_id):
     # is_mine if the user created this listing
     listing = Auction_Listing.objects.get(id=listing_id)
+    seller = listing.seller
     
     return render(request, "auctions/listing_detail.html", {
-        "listing": listing
+        "listing": listing,
+        "seller":seller,
     })
 
 
@@ -86,6 +101,7 @@ def listing_detail(request, listing_id):
 
 # def category(request):
 #     return render(request, "auctions/category.html")
+
 
 def category_detail(request, category_id):
     category = Category.objects.get(id=category_id)

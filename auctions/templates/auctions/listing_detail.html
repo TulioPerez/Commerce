@@ -1,19 +1,21 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Listing Detail</h2>
+    <h2>{{ listing.title }}</h2>
 
     <div>
-        {% if user.is_authenticated %}
-        {% endif %}
-
-        {% if user.is_seller %}
-        {% endif %}
-
-        {% if listing_is_watchlisted %}
-        {% endif %}
-
-        {% if user.is_bidder %}
-        {% endif %}
+        <!-- watchlist button appears if user is not seller-->
+        {% if user.is_authenticated and listing.seller.id != user.id %}
+            <form action="{% url 'listing_detail' listing.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">
+                    {% if listing in user.watchlist.all %}
+                        Remove from Watchlist
+                    {% else %}
+                        Add to Watchlist
+                    {% endif %}
+                </button>
+            </form>
+            {% endif %}
     </div>
 {% endblock %}

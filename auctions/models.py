@@ -20,6 +20,7 @@ class Category(models.Model):
 
 
 class Auction_Listing(models.Model):
+    # todo add listing date timestamp
     title = models.CharField(max_length = 25)
     description = models.TextField()
     # if Category or Category or Bid is deleted, do not proceed as long as a listing exists for them

@@ -8,7 +8,7 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
+        <h1>Auctioneers</h1>
         <div>
             {% if user.is_authenticated %}
                 Signed in as <strong>{{ user.username }}</strong>.
@@ -22,13 +22,17 @@
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
             </li>
             <li>
-                <a class="nav-link" href="{% url 'index' %}">Categories</a>
+                <a class="nav-link" href="{% url 'category' %}">Categories</a>
             </li>
             <!-- show menu items for registered users -->
             {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle">My Account</a>
                         <ul class="dropdown-menu">
+                            <!-- admin link for superusers -->
+                            {% if user.is_superuser %}
+                                <a class="dropdown-item" href="/admin/">Admin</a>
+                            {% endif %}
                             <li>
                                 <a class="dropdown-item" href="{% url 'index' %}">My Bids</a>
                             </li>

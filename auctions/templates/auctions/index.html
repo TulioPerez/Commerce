@@ -3,31 +3,32 @@
 {% block body %}
     <h2>Active Listings</h2>
     <!-- todo add \\ message div as in login / register if not logged in, and grey out "bid" button if available-->
-     <!-- "login or register to place a bid!"  -->
-    <ul>
-        {% for listing in listings %}
-        <!-- todo should be for category in category, then for listing in listings -->
-        <li>
+    <!-- "login or register to place a bid!"  -->
+    <!-- loop through categories and sort them -->
+    {% for category in categories %}
+    <!-- list category if auction items use it -->
+        {% if category.listings.count > 0 %}
             <div id="listing_block">
-                <!-- link for category list -->
-                <a id="listing_category" href="{% url 'category' listing.category.id %}">
-                    {{ listing.category.title }} >> 
-                </a>
-
-                <!-- link for item's detail page -->
-                <div id="listing_title">
-                    <a href="{% url 'item_listing' listing.id %}">
-                        {{ listing.title }}
-                    </a>
-                </div>
-
-                <div id="listing_price">
-                    {{ listing.price }}
-                </div> 
+                <!-- display category name and link to its page -->
+                <a id="listing_category" href="{% url 'category' category.id %}">{{ category.title }} >></a>
+                <ul>
+                    <!-- loop through listings displaying only those that belong to this category -->
+                    {% for listing in listings %}
+                    {% if listing.category.id == category.id %}
+                    <li>
+                        <div id="listing_title">
+                            <!-- link to the item description page -->
+                            <a href="{% url 'item_detail' listing.id %}">{{ listing.title }}</a>
+                        </div>
+                        <!-- display the price -->
+                        <div id="listing_price">%
+                            {{ listing.price }}
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
             </div>
-        </li>
-        {% endfor %}
-    </ul>
+        {% endif %}
+    {% endfor %}
 {% endblock %}
-
-<!-- <li><a href="/encyclopedia/entries/{{ entry }}">{{ entry }}</a></li> -->

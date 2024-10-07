@@ -7,9 +7,13 @@ from django.urls import reverse
 from .models import User, Auction_Listing, Bid, Category, Comment
 
 
+categories = Category.objects.order_by('title')
+
 def index(request):
-    categories = Category.objects.all() 
+    # filter out and sort categories with listings
+
     return render(request, "auctions/index.html", {
+        "categories":categories,
         "listings":Auction_Listing.objects.all(),
     })
 
@@ -68,19 +72,31 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def item_listing(request, is_user_listing):
+def item_detail(request, listing_id):
     # is_mine if the user created this listing
-    return render(request, "item_listing.html")
+    return render(request, "auctions/item_detail.html", {
+        "listing_id": Auction_Listing.id
+    })
 
 
 # def listings(request):
 #     return render(request, "listings.html")
     
 
+# def category(request):
+#     return render(request, "auctions/category.html")
+
+# def category(request):
+#     return render(request, "auctions/category.html")
+
+
 def category(request):
+    pass
+    categories = Category.objects.all().order_by('title')
     return render(request, "auctions/category.html", {
-        "category":Category.objects.all(),
+        "categories": categories,
     })
+
 
 
 def my_bids(request):

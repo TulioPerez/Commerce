@@ -10,7 +10,7 @@
         {% if category.listings.count > 0 %}
             <div id="listing_block">
                 <!-- display category name and link to its page -->
-                <a id="listing_category" href="{% url 'category' category.id %}">{{ category.title }} >></a>
+                <a id="listing_category" href="{% url 'categories' category.id %}">{{ category.title }} >></a>
                 <ul>
                     <!-- loop through listings displaying only those that belong to this category -->
                     {% for listing in listings %}

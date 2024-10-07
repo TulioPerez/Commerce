@@ -12,8 +12,10 @@ urlpatterns = [
     path("item/<int:listing_id>", views.item_detail, name="item_detail"),
 
     # category view for index page
-    path("category/<int:category_id>", views.category, name="category"),
+    path("categories/<int:category_id>", views.categories, name="categories"),
     # category view for category list
-    path("category/", views.category, name="category"),
+    path("categories/", views.categories, name="categories"),
     # sell
+
+    path("category/<int:category_id>", views.category_detail, name="category_detail"),
 ]

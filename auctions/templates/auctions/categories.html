@@ -7,7 +7,7 @@
             {% if category.listings.count > 0 %}
                 <li>
                     <div id="listing_block">
-                        <a href="{% url 'category' category.id %}">{{ category.title }}</a>
+                        <a href="{% url 'category_detail' category.id %}">{{ category.title }}</a>
                     </div>
                 </li>
             {% endif %}

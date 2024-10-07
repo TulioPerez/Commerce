@@ -7,10 +7,9 @@ from django.urls import reverse
 from .models import User, Auction_Listing, Bid, Category, Comment
 
 
-categories = Category.objects.order_by('title')
-
 def index(request):
     # filter out and sort categories with listings
+    categories = Category.objects.order_by('title')
 
     return render(request, "auctions/index.html", {
         "categories":categories,
@@ -86,14 +85,19 @@ def item_detail(request, listing_id):
 # def category(request):
 #     return render(request, "auctions/category.html")
 
-# def category(request):
-#     return render(request, "auctions/category.html")
+def category_detail(request, category_id):
+    category = Category.objects.get(id=category_id)
+    listings = Auction_Listing.objects.filter(category=category)
+    
+    return render(request, "auctions/category_detail.html", {
+        "category": category,
+        "listings": listings,
+    })
 
 
-def category(request):
-    pass
+def categories(request):
     categories = Category.objects.all().order_by('title')
-    return render(request, "auctions/category.html", {
+    return render(request, "auctions/categories.html", {
         "categories": categories,
     })
 

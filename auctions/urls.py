@@ -9,7 +9,9 @@ urlpatterns = [
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register, name="register"),
-    path("item/<int:listing_id>", views.item_detail, name="item_detail"),
+
+
+    path("item/<int:listing_id>", views.listing_detail, name="listing_detail"),
 
     # category view for index page
     path("categories/<int:category_id>", views.categories, name="categories"),

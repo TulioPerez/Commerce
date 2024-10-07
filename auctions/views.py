@@ -71,10 +71,12 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def item_detail(request, listing_id):
+def listing_detail(request, listing_id):
     # is_mine if the user created this listing
-    return render(request, "auctions/item_detail.html", {
-        "listing_id": Auction_Listing.id
+    listing = Auction_Listing.objects.get(id=listing_id)
+    
+    return render(request, "auctions/listing_detail.html", {
+        "listing": listing
     })
 
 

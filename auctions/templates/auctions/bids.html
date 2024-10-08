@@ -2,10 +2,22 @@
 
 {% block body %}
     <h2>Bids</h2>
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
 
+    <!-- temp comments -->
+    {% comment %}
     <div>
         {% if user.is_authenticated %}
-
+        <ul>
+            {% for bid in bids %}
+            <li>
+                <a href="{% url 'listing' listing.title %}">{{ listing.title }}</a>
+            </li>
+        </ul>
         {% endif %}
     </div>
+    {% endcomment %}
+
 {% endblock %}

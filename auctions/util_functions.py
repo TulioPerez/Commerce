@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from .models import User, Auction_Listing, Bid, Category, Comment
 
 
@@ -6,18 +7,20 @@ def is_user_listing(request, user, listing_id):
     pass
 
 
-def bid(bid):
-    if listing_is_open and not user_is_seller() and bid > Auction_Listing.price:
-        Auction_Listing.price = bid
-        Auction_Listing.price.save()
+def bid(user, listing_id, bid):
+    listing = Auction_Listing.objects.get(id=listing_id)
+    if listing_is_open(listing) and not user_is_seller(user, listing):
+        listing.price = bid
+        listing.save()
 
 
-def listing_is_open():
-    return Auction_Listing.is_open
+# helper functions for bid
+def listing_is_open(listing):
+    return listing.is_open
 
-
-def user_is_seller():
-    return User.id == Auction_Listing.seller.id
+# helper functions for bid
+def user_is_seller(user, listing):
+    return user == listing.seller
 
 
 def toggle_watchlist(user, listing_id):
@@ -26,14 +29,12 @@ def toggle_watchlist(user, listing_id):
 
     if listing in watchlist:
         user.watchlist.remove(listing)
-        return {"message": "Item added from watchlist."}
+        user.save()
+        return "Item removed from watchlist."
     else:
         user.watchlist.add(listing)
         user.save()
-        return {"message": "Item added from watchlist."}
-    
-        
-
+        return "Item added to watchlist"
 
     # details about a single listing showing current bid
     # if user logged in, they can add it to their "watchlist"

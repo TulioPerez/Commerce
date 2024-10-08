@@ -71,12 +71,36 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
+def selling(request):
+    if request.user.is_authenticated:
+        selling = Auction_Listing.objects.filter(seller=request.user) 
+            
+        if not selling.exists():
+            message = "No active listings found"
+
+        return render(request, "auctions/selling.html", {
+            "selling": selling,
+            "message": message
+        })
+
+
+def bids(request):
+    return render(request, "auctions/bids.html")
+
+
+def purchases(request):
+    return render(request,"auctions/purchases.html")
+
+
+def sell(request):
+    return render(request, "auctions/sell.html")
+        
+
 def watchlist(request):
     if request.user.is_authenticated:
         watchlist = request.user.watchlist.all()
     else:
         watchlist = []
-    print("Watchlist items:", [item.title for item in watchlist])
     return render(request, "auctions/watchlist.html", {
         "watchlist": watchlist,
         "message": "No items in watchlist."
@@ -96,14 +120,6 @@ def listing_detail(request, listing_id):
         "listing": listing,
         "seller":seller,
     })
-
-
-# def listings(request):
-#     return render(request, "listings.html")
-    
-
-# def category(request):
-#     return render(request, "auctions/category.html")
 
 
 def category_detail(request, category_id):

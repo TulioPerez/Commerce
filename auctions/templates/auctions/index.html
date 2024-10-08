@@ -21,9 +21,7 @@
                             <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
                         </div>
                         <!-- display the price -->
-                        <div id="listing_price">%
-                            {{ listing.price }}
-                        </div>
+                        <div id="listing_price">${{ listing.price }}</div>
                     </li>
                     {% endif %}
                     {% endfor %}

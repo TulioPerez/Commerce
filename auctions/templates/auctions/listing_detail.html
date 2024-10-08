@@ -6,8 +6,9 @@
     <div>
         <!-- watchlist button appears if user is not seller-->
         {% if user.is_authenticated and listing.seller.id != user.id %}
-            <form action="{% url 'listing_detail' listing.id %}" method="POST">
-                {% csrf_token %}
+        <form action="{% url 'listing_detail' listing.id %}" method="POST">
+            {% csrf_token %}
+                <input type="hidden" name="listing_id" value="{{ listing.id }}">
                 <button type="submit">
                     {% if listing in user.watchlist.all %}
                         Remove from Watchlist

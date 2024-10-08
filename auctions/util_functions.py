@@ -29,6 +29,7 @@ def toggle_watchlist(user, listing_id):
         return {"message": "Item added from watchlist."}
     else:
         user.watchlist.add(listing)
+        user.save()
         return {"message": "Item added from watchlist."}
     
         

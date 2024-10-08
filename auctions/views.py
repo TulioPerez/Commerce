@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, Auction_Listing, Bid, Category, Comment
+from . import util_functions
 
 
 def index(request):
@@ -65,7 +66,6 @@ def login_view(request):
         return render(request, "auctions/login.html")
 
 
-# todo add @login_required to prevent those NOT logged in from accessing (as per instruction hint)
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
@@ -83,11 +83,14 @@ def watchlist(request):
     })
 
 
-
 def listing_detail(request, listing_id):
     # is_mine if the user created this listing
     listing = Auction_Listing.objects.get(id=listing_id)
     seller = listing.seller
+
+    if request.method == "POST":
+        listing_id = request.POST["listing_id"]
+        util_functions.toggle_watchlist(request.user, listing_id)
     
     return render(request, "auctions/listing_detail.html", {
         "listing": listing,

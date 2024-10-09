@@ -71,10 +71,12 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
+
 # todo selling and bids are very similar - combine?
 def selling(request):
     if request.user.is_authenticated:
         selling = Auction_Listing.objects.filter(seller=request.user) 
+        message = ""
             
         if not selling.exists():
             message = "No active listings found"
@@ -85,18 +87,18 @@ def selling(request):
 
 
 def bids(request):
-    # if request.method == "POST":
-    return render(request, "auctions/bids.html")
+    if request.user.is_authenticated:
+        bids = Bid.objects.filter(user=request.user)
+        message = ""
+        # listings = Bid.objects.filter(Auction_Listing.)
 
-    # if request.is_authenticated:
-    #     bids = Auction_Listing.objects.filter(User=request.user)
+        if not bids.exists():
+            message = "You have not bid on any listings yet."
 
-    #     if not bids.exists:
-    #         message = "You have not bid on any listings yet."
-    #     return render(request, "auctions/bids.html", {
-    #         "bids": bids,
-    #         "message": message,
-    #     })
+        return render(request, "auctions/bids.html", {
+            "bids": bids,
+            "message": message
+        })
 
 
 def purchases(request):
@@ -126,7 +128,7 @@ def listing_detail(request, listing_id):
 
     if request.method == "POST":
         action = request.POST.get("action")
-        
+
         if action == "toggle_watchlist":
             listing_id = request.POST["listing_id"]
             message = util_functions.toggle_watchlist(request.user, listing_id)
@@ -164,7 +166,3 @@ def categories(request):
         "categories": categories,
     })
 
-
-
-def my_bids(request):
-    pass

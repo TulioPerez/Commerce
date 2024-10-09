@@ -7,11 +7,15 @@ def is_user_listing(request, user, listing_id):
     pass
 
 
-def bid(user, listing_id, bid):
+def bid(user, listing_id, bid_amount):
     listing = Auction_Listing.objects.get(id=listing_id)
     if listing_is_open(listing) and not user_is_seller(user, listing):
-        listing.price = bid
+        listing.price = bid_amount
         listing.save()
+
+        # save the bid to Bid table
+        new_bid = Bid(user=user, listing=listing, amount=bid_amount)
+        new_bid.save()
 
 
 # helper functions for bid

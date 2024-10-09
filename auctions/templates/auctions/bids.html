@@ -7,17 +7,21 @@
     {% endif %}
 
     <!-- temp comments -->
-    {% comment %}
     <div>
         {% if user.is_authenticated %}
         <ul>
             {% for bid in bids %}
             <li>
-                <a href="{% url 'listing' listing.title %}">{{ listing.title }}</a>
+                <div>
+                    <a href="{% url 'listing_detail' bid.listing.id %}">{{ bid.listing.title }}</a>
+                </div>
+                <div>
+                    Bid Amount: {{ bid.amount }}
+                </div>
             </li>
+            {% endfor %}
         </ul>
         {% endif %}
     </div>
-    {% endcomment %}
 
 {% endblock %}

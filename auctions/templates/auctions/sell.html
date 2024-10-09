@@ -5,7 +5,8 @@
 
     <div>
         {% if user.is_authenticated %}
-            <form action="POST">
+            <form action="{% url 'sell' %}" method="POST">
+                {% csrf_token %}
                 <!-- create css for container -->
                 <div>
                     <label for="category" class="form-label">Category</label>
@@ -21,7 +22,7 @@
                 <input type="text" class="form-control" id="title" name="title" required>
 
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" name="desciption" required>
+                <input type="text" class="form-control" id="description" name="description" required>
 
                 <label for="price" class="form-label">Price</label>
                 <input type="number" class="form-control" id="price" name="price" step="0.01" min="0.01" required>

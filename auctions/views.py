@@ -107,19 +107,17 @@ def purchases(request):
 
 
 def sell(request):
-    categories = Category.objects.all()
-    
     if request.method == "POST":
         category_id = request.POST.get("category")
-        category = Category.objects.get(id=category_id)
         title = request.POST.get("title")
         description = request.POST.get("description")
-        price = request.POST.get("price")
+        price = Decimal(request.POST.get("price"))
         quantity = request.POST.get("quantity")
         closing_time = request.POST.get("closing_time")
-        is_open = listing.is_open   
+        # is_open = listing.is_open   
 
-        listing = Auction_Listing(
+        category = Category.objects.get(id=category_id)
+        listing = Auction_Listing.objects.create(
             category = category,
             title = title,
             description = description,
@@ -129,8 +127,11 @@ def sell(request):
             seller = request.user,
         )
         listing.save()
-        return redirect("my_listings")
+        return render(request, "auctions/selling.html")
+    
     else:
+        # it's a get request - show the form
+        categories = Category.objects.all()
         return render(request, "auctions/sell.html", {
             "categories": categories,
             # "is_open": is_open

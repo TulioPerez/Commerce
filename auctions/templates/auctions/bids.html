@@ -13,10 +13,10 @@
             {% for bid in bids %}
             <li>
                 <div>
-                    <a href="{% url 'listing_detail' bid.listing.id %}">{{ bid.listing.title }}</a>
+                    <a href="{% url 'listing_detail' bid.listing.id %}">{{ bid.listing.title }}  {{ bid.listing.closing_date }}</a>
                 </div>
                 <div>
-                    Bid Amount: {{ bid.amount }}
+                    {{ bid.timestamp }}<br>&emsp;Bid Amount: {{ bid.amount }}
                 </div>
             </li>
             {% endfor %}

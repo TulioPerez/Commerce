@@ -7,7 +7,7 @@
     {% endif %}
     <div>
         <ul>
-            {% for sale in selling %}
+            {% for listing in listings %}
             <li>
                 <a href="{% url 'listing_detail' listing.id  %}">{{ listing.title }}</a>
             </li>

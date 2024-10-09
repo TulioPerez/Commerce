@@ -11,12 +11,12 @@
     <div>
         <!-- watchlist & bid buttons appears if user is not seller-->
         {% if user.is_authenticated and listing.seller.id != user.id %}
-            <div>Bid on this item</div>
+            <!-- <div>Place your bid!</div> -->
 
             <!-- Bid Button -->
             <form action="{% url 'listing_detail' listing.id %}" method="POST">
                 {% csrf_token %}
-                <label for="bid_amount" name="bid_amount">Bid Amount $</label>
+                <label for="bid_amount" name="bid_amount">Place your bid! $</label>
                 <input type="number" id="bid_amount" name="bid_amount"step="0.01" min="0.01" required>
                 <button type="submit" name="action" value="bid">Place Bid</button>
             </form>

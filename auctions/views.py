@@ -75,20 +75,21 @@ def logout_view(request):
 # todo selling and bids are very similar - combine?
 def selling(request):
     if request.user.is_authenticated:
-        selling = Auction_Listing.objects.filter(seller=request.user) 
+        listings = Auction_Listing.objects.filter(seller=request.user) 
         message = ""
             
-        if not selling.exists():
+        if not listings.exists():
             message = "No active listings found"
         return render(request, "auctions/selling.html", {
-            "selling": selling,
+            "listings": listings,
             "message": message,
         })
 
 
 def bids(request):
     if request.user.is_authenticated:
-        bids = Bid.objects.filter(user=request.user)
+        bids = Bid.objects.filter(user=request.user).order_by('listing__closing_date')
+        # .order_by('listing__title')
         message = ""
         # listings = Bid.objects.filter(Auction_Listing.)
 
@@ -111,7 +112,7 @@ def sell(request):
 
 def watchlist(request):
     if request.user.is_authenticated:
-        watchlist = request.user.watchlist.all()
+        watchlist = request.user.watchlist.all().order_by('title')
     else:
         watchlist = []
     return render(request, "auctions/watchlist.html", {
@@ -119,6 +120,19 @@ def watchlist(request):
         "message": "No items in watchlist."
     })
 
+
+# todo fix listing_detail:
+# Remove 4 hours from all timestamps (server is 4 hours ahead according to admin page)
+
+# Remove date listed and show time remaining beside listing title:
+#   if > days remaining, just show days remaining
+#   if < 1 day, show hours
+#   if < 1 hour, show minutes
+#   if < 1 minute, show seconds 
+
+# When listing expired:
+#   remove from active listings in index (no longer use: objects.all() in index)
+#   grey out listing in "my listings" and precede by "closed"
 
 def listing_detail(request, listing_id):
     listing = Auction_Listing.objects.get(id=listing_id)

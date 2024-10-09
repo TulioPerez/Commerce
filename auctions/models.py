@@ -20,28 +20,27 @@ class Category(models.Model):
 
 
 class Auction_Listing(models.Model):
-    # todo add listing date timestamp
-    title = models.CharField(max_length = 25)
-    description = models.TextField()
     # if Category or Category or Bid is deleted, do not proceed as long as a listing exists for them
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="listings")
+    title = models.CharField(max_length = 25)
+    description = models.TextField()
+    quantity = models.IntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     current_bid = models.ForeignKey("Bid", on_delete=models.PROTECT, related_name="listings", null=True, blank=True)
     # if User is deleted, delete related auction_listings 
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
-    quantity = models.IntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
-    closing_date = models.DateTimeField(blank=False)
+    closing_time = models.DateTimeField(blank=False)
     is_open = models.BooleanField(default=True)
 
     # allow user to close an auction
     def close_auction(self):
         self.is_open = False
-        self.save()
+        self.save()        
 
     # returns True when auction has expired
     def has_ended(self):
-        return not self.is_open or timezone.now() >= self.closing_date
+        return not self.is_open or timezone.now() >= self.closing_time
 
     def __str__(self):
         return f"{self.id}: Title: {self.title}"

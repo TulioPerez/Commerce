@@ -5,7 +5,39 @@
 
     <div>
         {% if user.is_authenticated %}
+            <form action="POST">
+                <!-- create css for container -->
+                <div>
+                    <label for="category" class="form-label">Category</label>
+                    <select id="category" class="form-select" name="category" required>
+                        <option value="" disabled selected>Select a category</option>
+                        {% for item in categories %}
+                            <option value="{{ item.id }}">{{ item.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="description" name="desciption" required>
+
+                <label for="price" class="form-label">Price</label>
+                <input type="number" class="form-control" id="price" name="price" step="0.01" min="0.01" required>
+
+                <label for="quantity" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" required>
+
+                <label for="closing_time" class="form-label">Closing Date & Time</label>
+                <input type="datetime-local" class="form-control" id="closing_time" name="closing_time" required>
+
+                <!-- make this option available only when auction exists (listing is being edited) -->
+                <label for="close_auction" class="form-label">Close this auction now</label>
+                <input type="checkbox" class="form-control" id="close_auction" name="close_auction">
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         {% endif %}
     </div>
 {% endblock %}

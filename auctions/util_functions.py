@@ -1,10 +1,8 @@
+from datetime import timedelta
+from django.utils import timezone
+
 from django.shortcuts import render
 from .models import User, Auction_Listing, Bid, Category, Comment
-
-
-def is_user_listing(request, user, listing_id):
-    # if listing created by (logged_in) user 
-    pass
 
 
 def bid(user, listing_id, bid_amount):
@@ -22,9 +20,19 @@ def bid(user, listing_id, bid_amount):
 def listing_is_open(listing):
     return listing.is_open
 
+
 # helper functions for bid
 def user_is_seller(user, listing):
     return user == listing.seller
+
+
+# convert server time to local to account for "Note: You are 4 hours behind server time.""
+# def convert_time(time_input, GMT_delta):
+#     if timezone.is_naive(time_input):
+#         time_input = timezone.make_aware(time_input, timezone.utc)
+
+#     offset = timedelta(hours=GMT_delta)        
+#     return time_input + offset
 
 
 def toggle_watchlist(user, listing_id):

@@ -1,8 +1,9 @@
+from django.utils import timezone
 from decimal import Decimal
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from .models import User, Auction_Listing, Bid, Category, Comment
@@ -10,7 +11,6 @@ from . import util_functions
 
 
 def index(request):
-    # filter out and sort categories with listings
     categories = Category.objects.order_by('title')
 
     return render(request, "auctions/index.html", {
@@ -88,7 +88,7 @@ def selling(request):
 
 def bids(request):
     if request.user.is_authenticated:
-        bids = Bid.objects.filter(user=request.user).order_by('listing__closing_date')
+        bids = Bid.objects.filter(user=request.user).order_by('listing__closing_time')
         # .order_by('listing__title')
         message = ""
         # listings = Bid.objects.filter(Auction_Listing.)
@@ -107,7 +107,34 @@ def purchases(request):
 
 
 def sell(request):
-    return render(request, "auctions/sell.html")
+    categories = Category.objects.all()
+    
+    if request.method == "POST":
+        category_id = request.POST.get("category")
+        category = Category.objects.get(id=category_id)
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        price = request.POST.get("price")
+        quantity = request.POST.get("quantity")
+        closing_time = request.POST.get("closing_time")
+        is_open = listing.is_open   
+
+        listing = Auction_Listing(
+            category = category,
+            title = title,
+            description = description,
+            price = price,
+            quantity = quantity,
+            closing_time = closing_time,
+            seller = request.user,
+        )
+        listing.save()
+        return redirect("my_listings")
+    else:
+        return render(request, "auctions/sell.html", {
+            "categories": categories,
+            # "is_open": is_open
+        })
         
 
 def watchlist(request):
@@ -139,6 +166,11 @@ def listing_detail(request, listing_id):
     price = listing.price
     seller = listing.seller
     message = ""
+    # server_time = timezone.now()
+
+    # adjust for server time difference (may not be necessary when listing from inside application vs admin panel)
+    # adjusted_closing_time = util_functions.convert_time(server_time, -4)
+    # adjusted_timestamp = util_functions.convert_time(server_time, -4) 
 
     if request.method == "POST":
         action = request.POST.get("action")
@@ -160,7 +192,9 @@ def listing_detail(request, listing_id):
         "listing": listing,
         "price": price,
         "seller":seller,
-        "message": message
+        "message": message,
+        # "timestamp": adjusted_timestamp,
+        # "closing_time": adjusted_closing_time,
     })
 
 

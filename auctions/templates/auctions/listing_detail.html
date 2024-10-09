@@ -2,7 +2,11 @@
 
 {% block body %}
     <h2>{{ listing.title }}</h2>
-    <div>{{ listing.price }}</div>
+    <div>Current Bid: {{ listing.price }}</div>
+
+    
+    <div>Listed: {{ listing.timestamp }}</div>
+    <div>Closing: {{ listing.closing_time }}</div>
 
     {% if message %}
         <div>{{ message }}</div>

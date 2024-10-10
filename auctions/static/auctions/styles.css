@@ -65,6 +65,11 @@ body {
   #listing_price {
     margin-left: 20px;
   }
+
+  #listing_img {
+    max-width: 400px;
+    height: auto;
+  }
   
   
   /* .dropdown-menu li a {

@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django import views
 from django.utils import timezone
 
 from django.shortcuts import render
@@ -24,6 +25,13 @@ def listing_is_open(listing):
 # helper functions for bid
 def user_is_seller(user, listing):
     return user == listing.seller
+
+
+# for image uploads
+def handle_image_upload(f, filename):
+    with open(filename, "wb+") as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
 # convert server time to local to account for "Note: You are 4 hours behind server time.""

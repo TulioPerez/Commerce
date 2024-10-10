@@ -1,11 +1,18 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>{{ listing.title }}</h2>
+    <div>
+        <!-- open image in new window onclick-->
+        <img src="{{ listing.image.url }}" alt="Listing Image" id="listing_img" 
+        onclick="window.open('{{ listing.image.url }}', '_blank', 'width=800', 'height=600');" 
+        style="cursor: pointer">
+    </div>
+
+    <div>
+        <h2>{{ listing.title }}</h2>
+    </div>
     <div>{{ listing.description }}</div>
     <div>Current Bid: {{ listing.price }}</div>
-
-    
     <div>Listed: {{ listing.timestamp }}</div>
     <div>Closing: {{ listing.closing_time }}</div>
 

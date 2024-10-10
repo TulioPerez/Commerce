@@ -24,7 +24,7 @@ class Auction_Listing(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="listings")
     title = models.CharField(max_length = 25)
     description = models.TextField()
-    image = models.ImageField(upload_to="auction_images/", blank=False)
+    image = models.FileField(upload_to="media/", blank=False, default="media/placeholder.jpg")
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     current_bid = models.ForeignKey("Bid", on_delete=models.PROTECT, related_name="listings", null=True, blank=True)

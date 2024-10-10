@@ -7,7 +7,11 @@
             {% if listing.category == category %}
             <li>
                 <div id="listing_block">
-                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
+                    {% if listing.seller.id == user.id %}
+                        <a href="{% url 'sell' %}">{{ listing.title }}</a>
+                    {% else %}
+                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
+                    {% endif %}
                 </div>
             </li>
             {% endif %}

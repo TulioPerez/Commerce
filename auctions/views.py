@@ -1,3 +1,4 @@
+from django import forms
 from django.utils import timezone
 from decimal import Decimal
 from django.contrib.auth import authenticate, login, logout
@@ -106,8 +107,14 @@ def purchases(request):
     return render(request,"auctions/purchases.html")
 
 
+class ImageUpload(forms.Form):
+    title = forms.CharField()
+    file = forms.FileField()
+
+
 def sell(request):
     if request.method == "POST":
+        message = "'"
         category_id = request.POST.get("category")
         title = request.POST.get("title")
         description = request.POST.get("description")
@@ -116,6 +123,11 @@ def sell(request):
         closing_time = request.POST.get("closing_time")
         # is_open = listing.is_open   
 
+        # handle image upload
+        image = request.FILES.get("image")
+        util_functions.handle_image_upload(image, "file.jpg")
+            # message = "There was a problem with the image uploaded."
+        
         category = Category.objects.get(id=category_id)
         listing = Auction_Listing.objects.create(
             category = category,
@@ -125,9 +137,12 @@ def sell(request):
             quantity = quantity,
             closing_time = closing_time,
             seller = request.user,
+            image = image,
         )
         listing.save()
-        return render(request, "auctions/selling.html")
+        return render(request, "auctions/selling.html", {
+            "message": message
+        })
     
     else:
         # it's a get request - show the form
@@ -161,6 +176,7 @@ def watchlist(request):
 # When listing expired:
 #   remove from active listings in index (no longer use: objects.all() in index)
 #   grey out listing in "my listings" and precede by "closed"
+
 
 def listing_detail(request, listing_id):
     listing = Auction_Listing.objects.get(id=listing_id)

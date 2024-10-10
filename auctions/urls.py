@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from django.contrib import admin
 
@@ -16,8 +18,6 @@ urlpatterns = [
     path("purchases/", views.purchases, name="purchases"),
     path("sell/", views.sell, name="sell"),
 
-
-
     path("item/<int:listing_id>", views.listing_detail, name="listing_detail"),
 
     # category view for index page
@@ -28,3 +28,8 @@ urlpatterns = [
 
     path("category/<int:category_id>", views.category_detail, name="category_detail"),
 ]
+
+
+# for image rendering
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

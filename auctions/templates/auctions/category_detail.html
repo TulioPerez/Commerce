@@ -8,7 +8,7 @@
             <li>
                 <div id="listing_block">
                     {% if listing.seller.id == user.id %}
-                        <a href="{% url 'sell' %}">{{ listing.title }}</a>
+                        <a href="{% url 'sell' listing.id %}">{{ listing.title }}</a>
                     {% else %}
                         <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
                     {% endif %}

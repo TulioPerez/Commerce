@@ -5,6 +5,17 @@
 
     <div>
         {% if user.is_authenticated %}
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+
+
+        
+        {% comment %}
             <form action="{% url 'sell' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <!-- create css for container -->
@@ -43,6 +54,8 @@
 
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+        {% endcomment %}
+
         {% endif %}
     </div>
 {% endblock %}

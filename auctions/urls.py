@@ -17,6 +17,8 @@ urlpatterns = [
     path("selling/", views.selling, name="selling"),
     path("purchases/", views.purchases, name="purchases"),
     path("sell/", views.sell, name="sell"),
+    
+    path("sell/<int:listing_id>/", views.sell, name="sell"),
 
     path("item/<int:listing_id>", views.listing_detail, name="listing_detail"),
 
@@ -24,8 +26,6 @@ urlpatterns = [
     path("categories/<int:category_id>", views.categories, name="categories"),
     # category view for category list
     path("categories/", views.categories, name="categories"),
-    # sell
-
     path("category/<int:category_id>", views.category_detail, name="category_detail"),
 ]
 

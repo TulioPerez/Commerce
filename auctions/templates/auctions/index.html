@@ -14,16 +14,22 @@
                 <ul>
                     <!-- loop through listings displaying only those that belong to this category -->
                     {% for listing in listings %}
-                    {% if listing.category.id == category.id %}
-                    <li>
-                        <div id="listing_title">
-                            <!-- link to the item description page -->
-                            <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
-                        </div>
-                        <!-- display the price -->
-                        <div id="listing_price">${{ listing.price }}</div>
-                    </li>
-                    {% endif %}
+                        {% if listing.category.id == category.id %}
+                        <li>
+                            <div id="listing_title">
+                                {% if listing.seller.id == user.id %}
+                                    <a href="{% url 'sell' listing.id %}">{{ listing.title }}</a>
+                                {% else %}
+                                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>                                
+                                {% endif %}
+                                <!-- link to the item description page -->
+                            </div>
+                            <!-- display the price -->
+                            <div id="listing_price">
+                                ${{ listing.price }}
+                            </div>
+                        </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>

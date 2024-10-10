@@ -4,8 +4,10 @@ from decimal import Decimal
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from .forms import ListingForm
+from .models import Auction_Listing
 
 from .models import User, Auction_Listing, Bid, Category, Comment
 from . import util_functions
@@ -112,46 +114,70 @@ class ImageUpload(forms.Form):
     file = forms.FileField()
 
 
-def sell(request):
+def sell(request, listing_id=None):
     if request.method == "POST":
-        message = "'"
-        category_id = request.POST.get("category")
-        title = request.POST.get("title")
-        description = request.POST.get("description")
-        price = Decimal(request.POST.get("price"))
-        quantity = request.POST.get("quantity")
-        closing_time = request.POST.get("closing_time")
-        # is_open = listing.is_open   
+        # listing_id was provided - this is an edit to a listing
+        if listing_id:
+            listing = get_object_or_404(Auction_Listing, id=listing_id)
+            form = ListingForm(request.POST, request.FILES, instance=listing)
+        else:
+            # no listing_id - create a new listing
+            form = ListingForm(request.POST, request.FILES)
 
-        # handle image upload
-        image = request.FILES.get("image")
-        util_functions.handle_image_upload(image, "file.jpg")
-            # message = "There was a problem with the image uploaded."
-        
-        category = Category.objects.get(id=category_id)
-        listing = Auction_Listing.objects.create(
-            category = category,
-            title = title,
-            description = description,
-            price = price,
-            quantity = quantity,
-            closing_time = closing_time,
-            seller = request.user,
-            image = image,
-        )
-        listing.save()
-        return render(request, "auctions/selling.html", {
-            "message": message
-        })
-    
+        if form.is_valid():
+            form.save()
+            return redirect('listing_detail', form.instance.id)
+
     else:
-        # it's a get request - show the form
-        categories = Category.objects.all()
-        return render(request, "auctions/sell.html", {
-            "categories": categories,
-            # "is_open": is_open
-        })
+        # pre-populate form if editing
+        if listing_id:
+            listing = get_object_or_404(Auction_Listing, id=listing_id)
+            form = ListingForm(instance=listing)
+        else:
+            form = ListingForm()
+
+    return render(request, "auctions/sell.html", {'form': form})
+
+# def sell(request):
+#     if request.method == "POST":
+#         message = "'"
+#         category_id = request.POST.get("category")
+#         title = request.POST.get("title")
+#         description = request.POST.get("description")
+#         price = Decimal(request.POST.get("price"))
+#         quantity = request.POST.get("quantity")
+#         closing_time = request.POST.get("closing_time")
+#         # is_open = listing.is_open   
+
+#         # handle image upload
+#         image = request.FILES.get("image")
+#         util_functions.handle_image_upload(image, "file.jpg")
+#             # message = "There was a problem with the image uploaded."
         
+#         category = Category.objects.get(id=category_id)
+#         listing = Auction_Listing.objects.create(
+#             category = category,
+#             title = title,
+#             description = description,
+#             price = price,
+#             quantity = quantity,
+#             closing_time = closing_time,
+#             seller = request.user,
+#             image = image,
+#         )
+#         listing.save()
+#         return render(request, "auctions/selling.html", {
+#             "message": message
+#         })
+    
+#     else:
+#         # it's a get request - show the form
+#         categories = Category.objects.all()
+#         return render(request, "auctions/sell.html", {
+#             "categories": categories,
+#             # "is_open": is_open
+#         })
+
 
 def watchlist(request):
     if request.user.is_authenticated:

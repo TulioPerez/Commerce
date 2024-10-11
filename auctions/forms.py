@@ -18,3 +18,7 @@ class ListingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.all()
+        self.fields['closing_time'].widget = forms.widgets.DateTimeInput(attrs={
+            'type': 'datetime-local',
+            'class': 'form-control',
+        })

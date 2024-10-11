@@ -10,6 +10,10 @@
 
     <div>
         <h2>{{ listing.title }}</h2>
+        <!--if user is seller, show "Edit Auction" hyperlink  -->
+       {% if listing.seller.id == user.id %}
+           <a href="{% url 'sell' listing.id %}">Edit Listing</a>
+       {% endif %}
     </div>
     <div>{{ listing.description }}</div>
     <div>Current Bid: {{ listing.price }}</div>
@@ -23,7 +27,6 @@
     <div>
         <!-- watchlist & bid buttons appears if user is not seller-->
         {% if user.is_authenticated and listing.seller.id != user.id %}
-            <!-- <div>Place your bid!</div> -->
 
             <!-- Bid Button -->
             <form action="{% url 'listing_detail' listing.id %}" method="POST">

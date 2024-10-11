@@ -9,7 +9,7 @@
         <ul>
             {% for listing in listings %}
                 <li>
-                    {% include "auctions/user_seller_routing.html" with listing=listing user=user %}
+                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
                 </li>
             {% endfor %}
         </ul>

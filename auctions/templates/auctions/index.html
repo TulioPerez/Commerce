@@ -20,8 +20,8 @@
                         {% if listing.category.id == category.id %}
                         <li>
                             <div id="listing_title">
-                                <!-- route the user if seller -->
-                                    {% include "auctions/user_seller_routing.html" with listing=listing user=user %}                            </div>
+                                <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>                            
+                            </div>
                             <div id="listing_price">
                                 ${{ listing.price }}
                             </div>

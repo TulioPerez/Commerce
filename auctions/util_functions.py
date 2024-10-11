@@ -34,15 +34,6 @@ def handle_image_upload(f, filename):
             destination.write(chunk)
 
 
-# convert server time to local to account for "Note: You are 4 hours behind server time.""
-# def convert_time(time_input, GMT_delta):
-#     if timezone.is_naive(time_input):
-#         time_input = timezone.make_aware(time_input, timezone.utc)
-
-#     offset = timedelta(hours=GMT_delta)        
-#     return time_input + offset
-
-
 def toggle_watchlist(user, listing_id):
     watchlist = user.watchlist.all()
     listing = Auction_Listing.objects.get(id=listing_id)
@@ -56,15 +47,22 @@ def toggle_watchlist(user, listing_id):
         user.save()
         return "Item added to watchlist"
 
-    # details about a single listing showing current bid
-    # if user logged in, they can add it to their "watchlist"
-    # if item is already in watchlist, user can remove it
-    # if logged in, user can bid on item that is not theirs
-    #     bid must be at least as much as starting bid 
-    #     additional bids should be greater than current bid
-    #         else error message
+def convert_time_remaining(closing_time):
+    now = timezone.now()
+    time_remaining = closing_time - now
 
-    # if logged in & user created the listing: 
-    #     ability to "close" the auction
-    #     current (highest) bid, if any, is the winner of the auction
-    #         listing is no longer available (archive?)
+    if time_remaining >= timedelta(days = 1):
+        return f"Closes in {time_remaining.days} days, {time_remaining.seconds // 3600} hours"
+    
+    elif time_remaining >= timedelta(hours = 1):
+        hours = time_remaining.seconds // 3600
+        minutes = (time_remaining.seconds % 3600) // 60
+        return f"Closing in {hours} hours, {minutes} minutes"
+    
+    elif time_remaining >= timedelta(minutes = 1):
+        minutes = time_remaining.seconds // 60
+        seconds = time_remaining.seconds % 60
+        return f"Hurry! Auction closes in {minutes} minutes, {seconds} seconds."
+    
+    else:
+        return "Auction Closed"

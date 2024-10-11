@@ -18,7 +18,7 @@
     <div>{{ listing.description }}</div>
     <div>Current Bid: {{ listing.price }}</div>
     <div>Listed: {{ listing.timestamp }}</div>
-    <div>Closing: {{ listing.closing_time }}</div>
+    <div>{{ time_remaining }}</div>
 
     {% if message %}
         <div>{{ message }}</div>

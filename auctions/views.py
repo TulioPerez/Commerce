@@ -121,10 +121,11 @@ def sell(request, listing_id=None):
             listing = get_object_or_404(Auction_Listing, id=listing_id)
             form = ListingForm(request.POST, request.FILES, instance=listing)
         else:
-            # no listing_id - create a new listing
+        # no listing_id - create a new listing
             form = ListingForm(request.POST, request.FILES)
 
         if form.is_valid():
+            # satisfy Auction_Listing's seller requirement  
             listing = form.save(commit=False)
             listing.seller = request.user
             form.save()
@@ -140,46 +141,6 @@ def sell(request, listing_id=None):
 
     return render(request, "auctions/sell.html", {'form': form})
 
-# def sell(request):
-#     if request.method == "POST":
-#         message = "'"
-#         category_id = request.POST.get("category")
-#         title = request.POST.get("title")
-#         description = request.POST.get("description")
-#         price = Decimal(request.POST.get("price"))
-#         quantity = request.POST.get("quantity")
-#         closing_time = request.POST.get("closing_time")
-#         # is_open = listing.is_open   
-
-#         # handle image upload
-#         image = request.FILES.get("image")
-#         util_functions.handle_image_upload(image, "file.jpg")
-#             # message = "There was a problem with the image uploaded."
-        
-#         category = Category.objects.get(id=category_id)
-#         listing = Auction_Listing.objects.create(
-#             category = category,
-#             title = title,
-#             description = description,
-#             price = price,
-#             quantity = quantity,
-#             closing_time = closing_time,
-#             seller = request.user,
-#             image = image,
-#         )
-#         listing.save()
-#         return render(request, "auctions/selling.html", {
-#             "message": message
-#         })
-    
-#     else:
-#         # it's a get request - show the form
-#         categories = Category.objects.all()
-#         return render(request, "auctions/sell.html", {
-#             "categories": categories,
-#             # "is_open": is_open
-#         })
-
 
 def watchlist(request):
     if request.user.is_authenticated:
@@ -192,30 +153,31 @@ def watchlist(request):
     })
 
 
-# todo fix listing_detail:
-# Remove 4 hours from all timestamps (server is 4 hours ahead according to admin page)
-
-# Remove date listed and show time remaining beside listing title:
-#   if > days remaining, just show days remaining
-#   if < 1 day, show hours
-#   if < 1 hour, show minutes
-#   if < 1 minute, show seconds 
-
+# todo :
 # When listing expired:
 #   remove from active listings in index (no longer use: objects.all() in index)
 #   grey out listing in "my listings" and precede by "closed"
+#   no Bid / watchlist button
+
+# details about a single listing showing current bid
+# if logged in, user can bid on item that is not theirs
+#     bid must be at least as much as starting bid 
+#     additional bids should be greater than current bid
+#         else error message
+
+# if logged in & user created the listing: 
+#     ability to "close" the auction
+#     current (highest) bid, if any, is the winner of the auction
+#         listing is no longer available (archive?)
 
 
 def listing_detail(request, listing_id):
-    listing = Auction_Listing.objects.get(id=listing_id)
+    # todo GET using this format for all functions:
+    listing = get_object_or_404(Auction_Listing, id=listing_id)
     price = listing.price
     seller = listing.seller
+    time_remaining = util_functions.convert_time_remaining(listing.closing_time)
     message = ""
-    # server_time = timezone.now()
-
-    # adjust for server time difference (may not be necessary when listing from inside application vs admin panel)
-    # adjusted_closing_time = util_functions.convert_time(server_time, -4)
-    # adjusted_timestamp = util_functions.convert_time(server_time, -4) 
 
     if request.method == "POST":
         action = request.POST.get("action")
@@ -238,6 +200,7 @@ def listing_detail(request, listing_id):
         "price": price,
         "seller":seller,
         "message": message,
+        "time_remaining": time_remaining,
         # "timestamp": adjusted_timestamp,
         # "closing_time": adjusted_closing_time,
     })

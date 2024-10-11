@@ -1,7 +1,7 @@
 from django import forms 
 from .models import *
 
-
+# django form for auction listings - allows repopulation of fields when editing
 class ListingForm(forms.ModelForm):
     class Meta:
         model = Auction_Listing
@@ -15,6 +15,7 @@ class ListingForm(forms.ModelForm):
             'closing_time',
             ]
     
+    # initializes the form instance
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.all()

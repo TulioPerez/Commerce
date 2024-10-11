@@ -2,60 +2,13 @@
 
 {% block body %}
     <h2>Sell Something!</h2>
-
     <div>
         {% if user.is_authenticated %}
-
-        <form action="" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p}}
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-
-
-
-        
-        {% comment %}
-            <form action="{% url 'sell' %}" method="POST" enctype="multipart/form-data">
+            <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <!-- create css for container -->
-                <label for="category" class="form-label">Category</label>
-                <div>
-                    <select id="category" class="form-select" name="category" required>
-                        <option value="" disabled selected>Select a category</option>
-                        {% for item in categories %}
-                            <option value="{{ item.id }}">{{ item.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <label for="image" class="form-label">Image</label>
-                <div>
-                    <input type="file" name="image" required>
-                </div>
-
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" name="title" required>
-
-                <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" name="description" required>
-
-                <label for="price" class="form-label">Price</label>
-                <input type="number" class="form-control" id="price" name="price" step="0.01" min="0.01" required>
-
-                <label for="quantity" class="form-label">Quantity</label>
-                <input type="number" class="form-control" id="quantity" name="quantity" required>
-
-                <label for="closing_time" class="form-label">Closing Date & Time</label>
-                <input type="datetime-local" class="form-control" id="closing_time" name="closing_time" required>
-
-                <!-- make this option available only when auction exists (listing is being edited) -->
-                <label for="close_auction" class="form-label">Close this auction now</label>
-                <input type="checkbox" class="form-control" id="close_auction" name="close_auction">
-
+                {{ form.as_p}}
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-        {% endcomment %}
-
         {% endif %}
     </div>
 {% endblock %}

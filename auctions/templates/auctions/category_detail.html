@@ -1,5 +1,6 @@
 {% extends "auctions/layout.html" %}
 
+
 {% block body %}
     <h2>{{ category.title }}</h2>
     <ul>
@@ -7,11 +8,7 @@
             {% if listing.category == category %}
             <li>
                 <div id="listing_block">
-                    {% if listing.seller.id == user.id %}
-                        <a href="{% url 'sell' listing.id %}">{{ listing.title }}</a>
-                    {% else %}
-                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
-                    {% endif %}
+                    {% include "auctions/user_seller_routing.html" with listing=listing user=user %}                
                 </div>
             </li>
             {% endif %}

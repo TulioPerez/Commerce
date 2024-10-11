@@ -3,7 +3,10 @@
 {% block body %}
     <h2>Active Listings</h2>
     <!-- todo add \\ message div as in login / register if not logged in, and grey out "bid" button if available-->
-    <!-- "login or register to place a bid!"  -->
+    {% if not is_authenticated %}
+        Like this item? Register or log in to place a bid!
+    {% endif %}
+
     <!-- loop through categories and sort them -->
     {% for category in categories %}
     <!-- list category if auction items use it -->
@@ -17,14 +20,8 @@
                         {% if listing.category.id == category.id %}
                         <li>
                             <div id="listing_title">
-                                {% if listing.seller.id == user.id %}
-                                    <a href="{% url 'sell' listing.id %}">{{ listing.title }}</a>
-                                {% else %}
-                                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>                                
-                                {% endif %}
-                                <!-- link to the item description page -->
-                            </div>
-                            <!-- display the price -->
+                                <!-- route the user if seller -->
+                                    {% include "auctions/user_seller_routing.html" with listing=listing user=user %}                            </div>
                             <div id="listing_price">
                                 ${{ listing.price }}
                             </div>

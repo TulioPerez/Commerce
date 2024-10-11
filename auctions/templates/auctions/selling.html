@@ -9,11 +9,7 @@
         <ul>
             {% for listing in listings %}
                 <li>
-                    {% if listing.seller.id == user.id %}
-                        <a href="{% url 'sell' listing.id %}">{{ listing.title }}</a>
-                    {% else %}
-                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>                                
-                    {% endif %}
+                    {% include "auctions/user_seller_routing.html" with listing=listing user=user %}
                 </li>
             {% endfor %}
         </ul>

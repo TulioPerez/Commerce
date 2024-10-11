@@ -125,6 +125,8 @@ def sell(request, listing_id=None):
             form = ListingForm(request.POST, request.FILES)
 
         if form.is_valid():
+            listing = form.save(commit=False)
+            listing.seller = request.user
             form.save()
             return redirect('listing_detail', form.instance.id)
 

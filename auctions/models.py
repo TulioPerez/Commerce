@@ -1,10 +1,14 @@
-from datetime import timezone
+from datetime import timedelta
+from django.utils import timezone
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db import transaction
 
 
 class User(AbstractUser):
     watchlist = models.ManyToManyField("Auction_Listing", related_name="watched_by", blank=True)
+    purchases = models.ManyToManyField("Auction_Listing", related_name="purchased_by", blank=True)
 
 
 class Category(models.Model):
@@ -34,14 +38,24 @@ class Auction_Listing(models.Model):
     closing_time = models.DateTimeField(blank=False)
     is_open = models.BooleanField(default=True)
 
-    # allow user to close an auction
+    # close auction
     def close_auction(self):
-        self.is_open = False
-        self.save()        
+        if self.is_open:
+            with transaction.atomic():
+                self.is_open = False
+                self.save()    
+
+                print(f"****Current BID = {self.current_bid} USER = {self.current_bid.user}\n")    
+
+                if self.current_bid:
+                    user = self.current_bid.user
+                    print(f"HIGHEST BIDDER = {user}")
+                    user.purchases.add(self)
+                    user.save()
 
     # returns True when auction has expired
     def has_ended(self):
-        return not self.is_open or timezone.now() >= self.closing_time
+        return not self.is_open or timezone.now() - timedelta(hours = 4) >= self.closing_time
 
     def __str__(self):
         return f"{self.id}: Title: {self.title}"
@@ -50,14 +64,14 @@ class Auction_Listing(models.Model):
 class Bid(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     # if User is deleted, delete the user's bid records
-    listing = models.ForeignKey(Auction_Listing, on_delete=models.PROTECT, related_name="bids")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
+    listing = models.ForeignKey(Auction_Listing, on_delete=models.PROTECT, related_name="bids")
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 class Comment(models.Model):
-    timestamp = models.DateTimeField(auto_now_add=True)
     # if user or listing is deleted, delete comments
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    timestamp = models.DateTimeField(auto_now_add=True)
     listing = models.ForeignKey(Auction_Listing, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField()

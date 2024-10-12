@@ -9,12 +9,14 @@ from .models import User, Auction_Listing, Bid, Category, Comment
 def bid(user, listing_id, bid_amount):
     listing = Auction_Listing.objects.get(id=listing_id)
     if listing_is_open(listing) and not user_is_seller(user, listing):
-        listing.price = bid_amount
-        listing.save()
 
         # save the bid to Bid table
         new_bid = Bid(user=user, listing=listing, amount=bid_amount)
         new_bid.save()
+
+        listing.price = bid_amount
+        listing.current_bid = new_bid
+        listing.save()
 
 
 # helper functions for bid
@@ -60,7 +62,6 @@ def get_time_remaining(closing_time):
         hours = time_remaining.seconds // 3600
         minutes = (time_remaining.seconds % 3600) // 60
         seconds = time_remaining.seconds % 60
-        print(f"*****TIME REMAINING*****\n days = {days}, hours = {hours}, minutes = {minutes}, seconds = {seconds}")
         return get_expiration_msg((days, hours, minutes, seconds))
     else:
         return  "Auction Closed", True
@@ -72,15 +73,16 @@ def get_expiration_msg(time_remaining):
     # days remaining
     if days >= 1: 
         return f"Closes in {days} days, {hours} hours, {minutes} minutes", False
-
     # hours remaining
     elif days == 0 and hours >= 1: 
         return f"Closes in {hours} hours, {minutes} minutes", False
-
     # 30+ minutes remaining
     elif minutes >=30: 
         return f"Closing in {minutes} minutes, {seconds} seconds.", False
-    
     # final minutes remaining
     else: 
         return f"Hurry! Auction closing in {minutes} minutes, {seconds} seconds!", False
+
+
+def get_buyer(bid):
+    return bid.user

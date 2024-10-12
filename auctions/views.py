@@ -1,5 +1,5 @@
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 from django import forms
 from decimal import Decimal
 from django.contrib.auth import authenticate, login, logout
@@ -9,12 +9,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from .forms import ListingForm
 from .models import Auction_Listing
+from django.db import transaction
+
 
 from .models import User, Auction_Listing, Bid, Category, Comment
 from . import util_functions
 
 
 # todo :
+# Add commenting
+
 # When listing expired:
 #   remove from active listings in index (no longer use: objects.all() in index)
 #   grey out listing in "my listings" and precede by "closed"
@@ -110,11 +114,18 @@ def sell(request, listing_id=None):
             listing = form.save(commit=False)
             listing.seller = request.user
 
-                        # Handle the closing_time field - ensure it is timezone-aware
+            # make closing time timezone-aware
             closing_time = form.cleaned_data['closing_time']
             if timezone.is_naive(closing_time):
                 closing_time = timezone.make_aware(closing_time)
 
+            #  ensure that closing time is in the futture and account for server difference
+            if closing_time <= timezone.now() - timedelta(hours = 4):
+                return render(request, "auctions/sell.html", {
+                    'form': form,
+                    'message': "Closing time must be set to a future time."
+                })
+            
             listing.closing_time = closing_time
 
             form.save()
@@ -162,12 +173,14 @@ def bids(request):
 
 
 def purchases(request):
-    return render(request,"auctions/purchases.html")
+    if request.user.is_authenticated:
+        purchases = request.user.purchases.all()
+    else:
+        purchases = []
 
-
-class ImageUpload(forms.Form):
-    title = forms.CharField()
-    file = forms.FileField()
+    return render(request,"auctions/purchases.html", {
+        "purchases": purchases
+    })
 
 
 def watchlist(request):
@@ -192,9 +205,19 @@ def listing_detail(request, listing_id):
     time_remaining_message, is_expired = util_functions.get_time_remaining(listing.closing_time)
 
     # close the auction if time has run out
-    if is_expired and listing.is_open:
-        listing.is_open = False
-        listing.save()
+    if listing.has_ended() and listing.is_open:
+        print("\n\n\n************** CLOSING THE AUCTION ************** \n\n\n\n")
+        print(f"listing.hanended = {listing.has_ended}")
+        listing.close_auction()
+        print("\n\n\n************** AUCTION is now CLOSED ************** \n\n\n\n")
+
+
+    # assign purchase to highest bidder, if any
+    # if not listing.is_open and listing.current_bid:
+    #     buyer = util_functions.get_buyer(listing.current_bid)
+    #     buyer.purchases.add(listing)
+    #     buyer.save()
+    #     print(f"purchase added to {buyer}")
 
     if request.method == "POST":
         action = request.POST.get("action")
@@ -236,4 +259,9 @@ def categories(request):
     return render(request, "auctions/categories.html", {
         "categories": categories,
     })
+
+
+class ImageUpload(forms.Form):
+    title = forms.CharField()
+    file = forms.FileField()
 

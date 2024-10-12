@@ -5,7 +5,18 @@
 
     <div>
         {% if user.is_authenticated %}
-
+            {% if purchases %}
+                <ul>
+                    {% for listing in purchases %}
+                    <li>
+                        <a href="{% url 'listing_detail' listing.id  %}">{{ listing.title }}</a>
+                        Purchased for ${{ listing.price }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                No purchases found.
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}

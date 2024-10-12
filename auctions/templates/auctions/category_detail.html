@@ -6,11 +6,13 @@
     <ul>
         {% for listing in listings %}
             {% if listing.category == category %}
-            <li>
-                <div id="listing_block">
-                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>                
-                </div>
-            </li>
+                <li>
+                    <div id="listing_block">
+                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>                
+                    </div>
+                </li>
+            {% else %}
+                No listings in this category
             {% endif %}
         {% endfor %}
     </ul>

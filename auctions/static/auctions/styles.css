@@ -70,7 +70,24 @@ body {
     max-width: 400px;
     height: auto;
   }
-  
+
+  #closing_time_soon {
+    font-weight: bold;
+    color: red;
+  }
+
+  #closing_time_running {
+    font-weight: bold;
+    color: green;
+  }
+
+  #closing_time_closed {
+    font-weight: bold;
+  }
+
+
+
+
   
   /* .dropdown-menu li a {
     padding: 10px;

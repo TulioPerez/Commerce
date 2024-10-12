@@ -1,5 +1,6 @@
-from django import forms
 from django.utils import timezone
+from datetime import datetime
+from django import forms
 from decimal import Decimal
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -13,13 +14,22 @@ from .models import User, Auction_Listing, Bid, Category, Comment
 from . import util_functions
 
 
-def index(request):
-    categories = Category.objects.order_by('title')
+# todo :
+# When listing expired:
+#   remove from active listings in index (no longer use: objects.all() in index)
+#   grey out listing in "my listings" and precede by "closed"
+#   no Bid / watchlist button
 
-    return render(request, "auctions/index.html", {
-        "categories":categories,
-        "listings":Auction_Listing.objects.all(),
-    })
+# details about a single listing showing current bid
+# if logged in, user can bid on item that is not theirs
+#     bid must be at least as much as starting bid 
+#     additional bids should be greater than current bid
+#         else error message
+
+# if logged in & user created the listing: 
+#     ability to "close" the auction
+#     current (highest) bid, if any, is the winner of the auction
+#         listing is no longer available (archive?)
 
 
 def register(request):
@@ -75,6 +85,52 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
+
+def index(request):
+    categories = Category.objects.order_by('title')
+
+    return render(request, "auctions/index.html", {
+        "categories":categories,
+        "listings":Auction_Listing.objects.all(),
+    })
+
+
+def sell(request, listing_id=None):
+    if request.method == "POST":
+        # listing_id was provided - this is an edit to a listing
+        if listing_id:
+            listing = get_object_or_404(Auction_Listing, id=listing_id)
+            form = ListingForm(request.POST, request.FILES, instance=listing)
+        else:
+        # no listing_id - create a new listing
+            form = ListingForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            # satisfy Auction_Listing's seller requirement  
+            listing = form.save(commit=False)
+            listing.seller = request.user
+
+                        # Handle the closing_time field - ensure it is timezone-aware
+            closing_time = form.cleaned_data['closing_time']
+            if timezone.is_naive(closing_time):
+                closing_time = timezone.make_aware(closing_time)
+
+            listing.closing_time = closing_time
+
+            form.save()
+            return redirect('listing_detail', listing.id)
+
+    else:
+        # pre-populate form if editing
+        if listing_id:
+            listing = get_object_or_404(Auction_Listing, id=listing_id)
+            form = ListingForm(instance=listing)
+        else:
+            form = ListingForm()
+
+    return render(request, "auctions/sell.html", {'form': form})
+
+
 # todo selling and bids are very similar - combine?
 def selling(request):
     if request.user.is_authenticated:
@@ -114,34 +170,6 @@ class ImageUpload(forms.Form):
     file = forms.FileField()
 
 
-def sell(request, listing_id=None):
-    if request.method == "POST":
-        # listing_id was provided - this is an edit to a listing
-        if listing_id:
-            listing = get_object_or_404(Auction_Listing, id=listing_id)
-            form = ListingForm(request.POST, request.FILES, instance=listing)
-        else:
-        # no listing_id - create a new listing
-            form = ListingForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            # satisfy Auction_Listing's seller requirement  
-            listing = form.save(commit=False)
-            listing.seller = request.user
-            form.save()
-            return redirect('listing_detail', form.instance.id)
-
-    else:
-        # pre-populate form if editing
-        if listing_id:
-            listing = get_object_or_404(Auction_Listing, id=listing_id)
-            form = ListingForm(instance=listing)
-        else:
-            form = ListingForm()
-
-    return render(request, "auctions/sell.html", {'form': form})
-
-
 def watchlist(request):
     if request.user.is_authenticated:
         watchlist = request.user.watchlist.all().order_by('title')
@@ -153,39 +181,28 @@ def watchlist(request):
     })
 
 
-# todo :
-# When listing expired:
-#   remove from active listings in index (no longer use: objects.all() in index)
-#   grey out listing in "my listings" and precede by "closed"
-#   no Bid / watchlist button
-
-# details about a single listing showing current bid
-# if logged in, user can bid on item that is not theirs
-#     bid must be at least as much as starting bid 
-#     additional bids should be greater than current bid
-#         else error message
-
-# if logged in & user created the listing: 
-#     ability to "close" the auction
-#     current (highest) bid, if any, is the winner of the auction
-#         listing is no longer available (archive?)
-
-
 def listing_detail(request, listing_id):
-    # todo GET using this format for all functions:
+    # todo use GETin this format for all functions:
     listing = get_object_or_404(Auction_Listing, id=listing_id)
     price = listing.price
     seller = listing.seller
-    time_remaining = util_functions.convert_time_remaining(listing.closing_time)
     message = ""
+
+    # unpack return values for countdown message and is_open state
+    time_remaining_message, is_expired = util_functions.get_time_remaining(listing.closing_time)
+
+    # close the auction if time has run out
+    if is_expired and listing.is_open:
+        listing.is_open = False
+        listing.save()
 
     if request.method == "POST":
         action = request.POST.get("action")
-
+        # toggle watchlist
         if action == "toggle_watchlist":
             listing_id = request.POST["listing_id"]
             message = util_functions.toggle_watchlist(request.user, listing_id)
-        
+        # user bid 
         if action == "bid":
             bid_amount = Decimal(request.POST.get("bid_amount"))
             if bid_amount > listing.price:
@@ -200,15 +217,13 @@ def listing_detail(request, listing_id):
         "price": price,
         "seller":seller,
         "message": message,
-        "time_remaining": time_remaining,
-        # "timestamp": adjusted_timestamp,
-        # "closing_time": adjusted_closing_time,
+        "time_remaining_message": time_remaining_message
     })
 
 
 def category_detail(request, category_id):
     category = Category.objects.get(id=category_id)
-    listings = Auction_Listing.objects.filter(category=category)
+    listings = Auction_Listing.objects.filter(category=category, is_open=True)
     
     return render(request, "auctions/category_detail.html", {
         "category": category,

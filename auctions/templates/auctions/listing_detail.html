@@ -1,8 +1,10 @@
 {% extends "auctions/layout.html" %}
+{% load tz %}
+
 
 {% block body %}
     <div>
-        <!-- open image in new window onclick-->
+        <!-- display image and open/enlarge in new window onclick-->
         <img src="{{ listing.image.url }}" alt="Listing Image" id="listing_img" 
         onclick="window.open('{{ listing.image.url }}', '_blank', 'width=800', 'height=600');" 
         style="cursor: pointer">
@@ -11,14 +13,30 @@
     <div>
         <h2>{{ listing.title }}</h2>
         <!--if user is seller, show "Edit Auction" hyperlink  -->
-       {% if listing.seller.id == user.id %}
-           <a href="{% url 'sell' listing.id %}">Edit Listing</a>
-       {% endif %}
+        {% if listing.seller.id == user.id %}
+            <a href="{% url 'sell' listing.id %}">Edit Listing</a>
+        {% endif %}
     </div>
+    
     <div>{{ listing.description }}</div>
-    <div>Current Bid: {{ listing.price }}</div>
     <div>Listed: {{ listing.timestamp }}</div>
-    <div>{{ time_remaining }}</div>
+    <!-- set message styling according to text in return value -->
+    {{ time_remaining_message }}
+
+    <!-- <div 
+    id="{% if 'Hurry!' in time_remaining %}closing_time_soon{% elif 'Auction Closed' in time_remaining %}closing_time_closed{% else %}closing_time_running{% endif %}">
+        {{ time_remaining|localtime }}
+    </div> -->
+
+    <div id="">
+        {% if listing.is_open %}
+            Current Bid: 
+        {% else %}
+            Ending Bid
+        {% endif %}
+        {{ listing.price }}
+    </div>
+
 
     {% if message %}
         <div>{{ message }}</div>
@@ -26,7 +44,7 @@
         </div>
     <div>
         <!-- watchlist & bid buttons appears if user is not seller-->
-        {% if user.is_authenticated and listing.seller.id != user.id %}
+        {% if user.is_authenticated and listing.seller.id != user.id and listing.is_open %}
 
             <!-- Bid Button -->
             <form action="{% url 'listing_detail' listing.id %}" method="POST">

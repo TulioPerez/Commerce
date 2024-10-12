@@ -1,6 +1,6 @@
-from datetime import timedelta
-from django import views
 from django.utils import timezone
+from datetime import timedelta, datetime
+from django import views
 
 from django.shortcuts import render
 from .models import User, Auction_Listing, Bid, Category, Comment
@@ -47,22 +47,40 @@ def toggle_watchlist(user, listing_id):
         user.save()
         return "Item added to watchlist"
 
-def convert_time_remaining(closing_time):
-    now = timezone.now()
-    time_remaining = closing_time - now
 
-    if time_remaining >= timedelta(days = 1):
-        return f"Closes in {time_remaining.days} days, {time_remaining.seconds // 3600} hours"
-    
-    elif time_remaining >= timedelta(hours = 1):
+def get_time_remaining(closing_time):
+    now = timezone.make_aware(datetime.now())
+    # now = timezone.localtime(timezone.now())
+    time_remaining = closing_time - now
+    print(f"time_remaining = {time_remaining}")
+
+    #  if there is time remaining, get expiration message
+    if time_remaining.total_seconds() > 0:
+        days = time_remaining.days
         hours = time_remaining.seconds // 3600
         minutes = (time_remaining.seconds % 3600) // 60
-        return f"Closing in {hours} hours, {minutes} minutes"
-    
-    elif time_remaining >= timedelta(minutes = 1):
-        minutes = time_remaining.seconds // 60
         seconds = time_remaining.seconds % 60
-        return f"Hurry! Auction closes in {minutes} minutes, {seconds} seconds."
-    
+        print(f"*****TIME REMAINING*****\n days = {days}, hours = {hours}, minutes = {minutes}, seconds = {seconds}")
+        return get_expiration_msg((days, hours, minutes, seconds))
     else:
-        return "Auction Closed"
+        return  "Auction Closed", True
+
+
+def get_expiration_msg(time_remaining):
+    days, hours, minutes, seconds = time_remaining
+
+    # days remaining
+    if days >= 1: 
+        return f"Closes in {days} days, {hours} hours, {minutes} minutes", False
+
+    # hours remaining
+    elif days == 0 and hours >= 1: 
+        return f"Closes in {hours} hours, {minutes} minutes", False
+
+    # 30+ minutes remaining
+    elif minutes >=30: 
+        return f"Closing in {minutes} minutes, {seconds} seconds.", False
+    
+    # final minutes remaining
+    else: 
+        return f"Hurry! Auction closing in {minutes} minutes, {seconds} seconds!", False

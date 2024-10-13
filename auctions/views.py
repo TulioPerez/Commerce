@@ -119,7 +119,7 @@ def sell(request, listing_id=None):
             if timezone.is_naive(closing_time):
                 closing_time = timezone.make_aware(closing_time)
 
-            #  ensure that closing time is in the futture and account for server difference
+            #  ensure that closing time is in the future and account for server difference
             if closing_time <= timezone.now() - timedelta(hours = 4):
                 return render(request, "auctions/sell.html", {
                     'form': form,
@@ -127,6 +127,12 @@ def sell(request, listing_id=None):
                 })
             
             listing.closing_time = closing_time
+            
+            # close the auction if is_open was set to False
+            if not listing.is_open:
+                listing.close_auction()
+                print("LISTING IS NOW CLOSED\n\nLISTING IS NOW CLOSED\n\nLISTING IS NOW CLOSED\n\nLISTING IS NOW CLOSED\n\n")
+                listing.closing_time = timezone.now() - timedelta(hours = 4)
 
             form.save()
             return redirect('listing_detail', listing.id)
@@ -205,9 +211,12 @@ def listing_detail(request, listing_id):
     time_remaining_message, is_expired = util_functions.get_time_remaining(listing.closing_time)
 
     # close the auction if time has run out
-    if listing.has_ended() and listing.is_open:
+    if (listing.has_ended() and listing.is_open):
         print("\n\n\n************** CLOSING THE AUCTION ************** \n\n\n\n")
-        print(f"listing.hanended = {listing.has_ended}")
+        print(f"listing.hasended = {listing.has_ended}")
+
+        # seller just closed the auction - change closing time to now
+        # listing.closing_time = timezone.now() - timedelta(hours = 4)
         listing.close_auction()
         print("\n\n\n************** AUCTION is now CLOSED ************** \n\n\n\n")
 

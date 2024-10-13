@@ -13,6 +13,7 @@ class ListingForm(forms.ModelForm):
             'price',
             'quantity',
             'closing_time',
+            'is_open'
             ]
     
     # initializes the form instance

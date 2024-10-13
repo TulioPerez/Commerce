@@ -54,7 +54,7 @@ def get_time_remaining(closing_time):
     now = timezone.make_aware(datetime.now())
     # now = timezone.localtime(timezone.now())
     time_remaining = closing_time - now
-    print(f"time_remaining = {time_remaining}")
+    # print(f"time_remaining = {time_remaining}")
 
     #  if there is time remaining, get expiration message
     if time_remaining.total_seconds() > 0:

@@ -40,18 +40,20 @@ class Auction_Listing(models.Model):
 
     # close auction
     def close_auction(self):
-        if self.is_open:
-            with transaction.atomic():
-                self.is_open = False
-                self.save()    
+        with transaction.atomic():
+            self.is_open = False
 
-                print(f"****Current BID = {self.current_bid} USER = {self.current_bid.user}\n")    
+            # if self.closing_time > timezone.now() - timedelta(hours = 4):
+            #     self.closing_time = timezone.now() - timedelta(hours = 4)
 
-                if self.current_bid:
-                    user = self.current_bid.user
-                    print(f"HIGHEST BIDDER = {user}")
-                    user.purchases.add(self)
-                    user.save()
+            self.save()    
+
+            print(f"BID BID BID = {self.current_bid}\n\n USER USER USER = {self.current_bid.user}")
+            if self.current_bid:
+                user = self.current_bid.user
+                user.purchases.add(self)
+                user.save()
+
 
     # returns True when auction has expired
     def has_ended(self):

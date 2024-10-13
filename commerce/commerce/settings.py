@@ -115,7 +115,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# TIME_ZONE = 'UTC'
 TIME_ZONE = 'America/New_York'
 
 

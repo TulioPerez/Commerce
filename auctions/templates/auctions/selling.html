@@ -8,8 +8,18 @@
     <div>
         <ul>
             {% for listing in listings %}
-                <li>
+                <li id="list">
                     <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
+                    <div>
+                        Listed: {{ listing.timestamp }}
+                    </div>
+                    <div>
+                        &emsp;Closing time: {{ listing.closing_time }}
+                    </div>
+                    <div>
+                        &emsp;${{ listing.price }}
+                    </div>
+
                 </li>
             {% endfor %}
         </ul>

@@ -8,9 +8,11 @@
             {% if purchases %}
                 <ul>
                     {% for listing in purchases %}
-                    <li>
+                    <li id="list">
                         <a href="{% url 'listing_detail' listing.id  %}">{{ listing.title }}</a>
-                        Purchased for ${{ listing.price }}
+                        <div>
+                            &emsp;Purchased for ${{ listing.price }} on {{ listing.closing_time }}
+                        </div>
                     </li>
                     {% endfor %}
                 </ul>

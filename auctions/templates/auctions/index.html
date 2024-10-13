@@ -1,9 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-{% block content %}
 <h2>Active Listings</h2>
-<!-- todo add \\ message div as in login / register if not logged in, and grey out "bid" button if available-->
 
 <!-- loop through categories and sort them -->
 {% for category in categories %}
@@ -16,28 +14,33 @@
         <!-- loop through listings displaying only those that belong to this category -->
         {% for listing in listings %}
         {% if listing.category.id == category.id and listing.is_open %}
-            <!-- display image and open/enlarge in new window onclick-->
-            <li>
-                <ul id="ul_no_bullets">
-                    <li>
-                        <img id="image_thumbnail" src="{{ listing.image.url }}" alt="Listing Image" id="listing_img">
-                    </li>
-                    <li>
-                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
-                    </li>
-                    <li>
-                        ${{ listing.price }}
-                    </li>
-                    <li>
-                        Created: {{ listing.timestamp }}
-                    </li>
-                </ul>
-            </li>
+        <!-- display image and open/enlarge in new window onclick-->
+        <li id="listing_container">
+            <div id="image_container">
+                <img id="image_thumbnail" src="{{ listing.image.url }}" alt="Listing Image" id="listing_img">
+            </div>
+            <ul id="ul_no_bullets">
+                <li>
+                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
+                </li>
+                <li>
+                    ${{ listing.price }}
+                </li>
+                <li>
+                    Created: {{ listing.timestamp }}
+                </li>
+                <li id="index_details">
+                    {{ listing.description }}
+                </li>
+                <li>
+                    Closing Time: {{ listing.closing_time }}
+                </li>
+            </ul>
+        </li>
         {% endif %}
         {% endfor %}
     </ul>
 </div>
 {% endif %}
 {% endfor %}
-{% endblock %}
 {% endblock %}

@@ -79,10 +79,10 @@ def get_expiration_msg(time_remaining):
         return f"Closes in {hours} hours, {minutes} minutes", False
     # 30+ minutes remaining
     elif minutes >=30: 
-        return f"Closing in {minutes} minutes, {seconds} seconds.", False
+        return f"Closes in {minutes} minutes, {seconds} seconds.", False
     # final minutes remaining
     else: 
-        return f"Hurry! Auction closing in {minutes} minutes, {seconds} seconds!", False
+        return f"Hurry - Auction closes in {minutes} minutes, {seconds} seconds!", False
 
 
 def get_buyer(bid):

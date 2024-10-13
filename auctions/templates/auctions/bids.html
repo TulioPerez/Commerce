@@ -15,8 +15,8 @@
                 <div>
                     <a href="{% url 'listing_detail' bid.listing.id %}">{{ bid.listing.title }}  {{ bid.listing.closing_time }}</a>
                 </div>
-                <div>
-                    {{ bid.timestamp }}<br>&emsp;Bid Amount: {{ bid.amount }}
+                <div id="list">
+                    &emsp;Bid date: {{ bid.timestamp }}<br>&emsp;Amount: ${{ bid.amount }}
                 </div>
             </li>
             {% endfor %}

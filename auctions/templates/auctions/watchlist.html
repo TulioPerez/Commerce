@@ -8,8 +8,14 @@
             {% if watchlist %}
                 <ul>
                     {% for listing in watchlist %}
-                        <li>
+                        <li id="list">
                             <a href="{% url 'listing_detail' listing.id  %}">{{ listing.title }}</a>
+                            <div>
+                                &emsp;${{ listing.price }}
+                            </div>
+                            <div>
+                                &emsp;Closing time: {{ listing.closing_time }}
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>

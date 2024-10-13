@@ -12,14 +12,22 @@ body {
   text-align: right;
 }
 
+#message {
+  font-weight: bold;
+}
+
 #login_or_register {
   font-size: small;
   /* display: inline; */
 }
 
+#bid_form {
+  margin: 10px 0px;
+}
+
 .nav {
   margin-bottom: 20px;
-  padding: 0px 25px;
+  padding: 5px 25px;
   background-color: rgb(233, 233, 233);
 }
 
@@ -56,7 +64,34 @@ body {
 }
 
 #content_block {
-  padding: 5px 25px;
+  padding: 0 25px;
+}
+
+#title {
+  margin-top: 15px;
+}
+
+#details {
+  padding: 25px;
+}
+
+#index_details {
+  padding: 15px;
+}
+
+#comments_heading {
+  padding: 15px 25px;
+}
+
+#comment_block {
+  padding: 10px 25px;
+  font-weight: bold;
+}
+
+#comments {
+  font-weight: normal;
+  margin-top: 10px;
+  margin-bottom: 25px;
 }
 
 #listing_block {
@@ -65,8 +100,17 @@ body {
 
 #listing_title,
 #listing_description,
-#listing_price {
+#price_bid_container {
   margin-left: 20px;
+}
+
+#listing_price {
+  font-size: large;
+  font-weight: bold;
+}
+
+#price_bid_container {
+  font-size: small;
 }
 
 #listing_img {
@@ -93,6 +137,23 @@ body {
   height: 150px;
 }
 
+#image_container {
+  text-align: center;
+}
+
 #ul_no_bullets {
   list-style: none;
+}
+
+#list {
+  margin-bottom: 20px;
+}
+
+#listing_container {
+  padding: 15px 0;
+  margin-bottom: 25px;
+  margin-top: 10px;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: rgb(228, 227, 227);
 }

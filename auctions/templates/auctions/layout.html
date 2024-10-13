@@ -21,7 +21,9 @@
             </div>
             <div class="col-12 col-md-4 d-flex justify-content-end align-items-center text-end">
                 {% if user.is_authenticated %}
+                <div class="mb-1">
                     Signed in as <strong>{{ user.username }}</strong>
+                </div>
                 {% else %}
                 <div>
                     <div>Not signed in.</div>

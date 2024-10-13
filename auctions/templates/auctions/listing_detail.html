@@ -94,7 +94,28 @@
     {{ listing.description }}
 </ul>
 
-<h4>Comments:</h4>
-
+{% if user.is_authenticated %}
+<h4>Add a comment:</h4>
+<form action="{% url 'listing_detail' listing.id %}" method="POST">
+    {% csrf_token %}
+    {{ comment_form.as_p }}  <!-- Render the form fields -->
+    <button type="submit" name="action" value="submit_comment">Submit Comment</button>
+</form>
+<div>
+    <ul>
+        {% if listing.comments %}
+        Previous Comments:
+            {% for comment in comments %}
+            <li>
+                {{ comment.content }} 
+                <p>
+                    - by {{ comment.user.username }} on {{ comment.timestamp|localtime }}
+                </p>
+            </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
 
 {% endblock %}

@@ -37,15 +37,12 @@ class Auction_Listing(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     closing_time = models.DateTimeField(blank=False)
     is_open = models.BooleanField(default=True)
+    comment = models.ForeignKey("Comment", on_delete=models.SET_NULL, null=True, blank=True, related_name="comments")
 
     # close auction
     def close_auction(self):
         with transaction.atomic():
             self.is_open = False
-
-            # if self.closing_time > timezone.now() - timedelta(hours = 4):
-            #     self.closing_time = timezone.now() - timedelta(hours = 4)
-
             self.save()    
 
             print(f"BID BID BID = {self.current_bid}\n\n USER USER USER = {self.current_bid.user}")

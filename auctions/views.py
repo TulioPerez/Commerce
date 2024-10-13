@@ -7,13 +7,13 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from .forms import ListingForm
+from .forms import ListingForm, CommentForm
 from .models import Auction_Listing
 from django.db import transaction
 
 
-from .models import User, Auction_Listing, Bid, Category
-# , Comment
+
+from .models import User, Auction_Listing, Bid, Category, Comment
 from . import util_functions
 
 
@@ -207,6 +207,9 @@ def listing_detail(request, listing_id):
     seller = listing.seller
     message = ""
     bids = listing.bids.count()
+    comments = listing.comments.all()
+
+    comment_form = CommentForm()
 
     # unpack return values for countdown message and is_open state
     time_remaining_message, _ = util_functions.get_time_remaining(listing.closing_time)
@@ -219,20 +222,13 @@ def listing_detail(request, listing_id):
         listing.close_auction()
         print("\n\n\n************** AUCTION is now CLOSED ************** \n\n\n\n")
 
-
-    # assign purchase to highest bidder, if any
-    # if not listing.is_open and listing.current_bid:
-    #     buyer = util_functions.get_buyer(listing.current_bid)
-    #     buyer.purchases.add(listing)
-    #     buyer.save()
-    #     print(f"purchase added to {buyer}")
-
     if request.method == "POST":
         action = request.POST.get("action")
         # toggle watchlist
         if action == "toggle_watchlist":
             listing_id = request.POST["listing_id"]
             message = util_functions.toggle_watchlist(request.user, listing_id)
+
         # user bid 
         if action == "bid":
             bid_amount = Decimal(request.POST.get("bid_amount"))
@@ -243,6 +239,16 @@ def listing_detail(request, listing_id):
             else:
                 message = f"Your bid amount must be higher than the current bid of {listing.price}"
 
+        # comments
+        if action == "submit_comment":
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit = False)
+                comment.user = request.user
+                comment.listing = listing
+                comment.save()
+                comment.message = "Comment added successfully"
+
     return render(request, "auctions/listing_detail.html", {
         "listing": listing,
         "price": price,
@@ -250,6 +256,8 @@ def listing_detail(request, listing_id):
         "seller":seller,
         "message": message,
         "time_remaining_message": time_remaining_message,
+        "comments": comments,
+        "comment_form": comment_form,
     })
 
 

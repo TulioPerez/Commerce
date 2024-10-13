@@ -102,8 +102,8 @@
             <button type="submit" name="action" value="submit_comment">Submit Comment</button>
         </form>
         <div id="comments_heading">
-            {% if listing.comments %}
-            Previous Comments:t
+            {% if comments %}
+            Previous Comments:
             <ul>
                 {% for comment in comments %}
                 <li id="comments">
@@ -115,7 +115,9 @@
                 {% endfor %}
             </ul>
             {% else %}
-                No comments yet. Be the first to post a comment!
+            <div id="comments">
+                No comments yet - be the first to post a comment!
+            </div>
             {% endif %}
         </div>
         {% endif %}

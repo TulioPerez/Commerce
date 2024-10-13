@@ -37,7 +37,7 @@ class Auction_Listing(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     closing_time = models.DateTimeField(blank=False)
     is_open = models.BooleanField(default=True)
-    comment = models.ForeignKey("Comment", on_delete=models.SET_NULL, null=True, blank=True, related_name="comments")
+    comment = models.ForeignKey("Comment", on_delete=models.SET_NULL, default=None, null=True, blank=True, related_name="comments")
 
     # close auction
     def close_auction(self):

@@ -1,35 +1,41 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-    <!-- todo add \\ message div as in login / register if not logged in, and grey out "bid" button if available-->
-    {% if not is_authenticated %}
-        Like this item? Register or log in to place a bid!
-    {% endif %}
+<h2>Active Listings</h2>
+<!-- todo add \\ message div as in login / register if not logged in, and grey out "bid" button if available-->
 
-    <!-- loop through categories and sort them -->
-    {% for category in categories %}
-    <!-- list category if auction items use it -->
-        {% if category.listings.count > 0 %}
-            <div id="listing_block">
-                <!-- display category name and link to its page -->
-                <a id="listing_category" href="{% url 'category_detail' category.id %}">{{ category.title }} >></a>
-                <ul>
-                    <!-- loop through listings displaying only those that belong to this category -->
-                    {% for listing in listings %}
-                        {% if listing.category.id == category.id and listing.is_open %}
-                        <li>
-                            <div id="listing_title">
-                                <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>                            
-                            </div>
-                            <div id="listing_price">
-                                ${{ listing.price }}
-                            </div>
-                        </li>
-                        {% endif %}
-                    {% endfor %}
+<!-- loop through categories and sort them -->
+{% for category in categories %}
+<!-- list category if auction items use it -->
+{% if category.listings.count > 0 %}
+<div id="listing_block">
+    <!-- display category name and link to its page -->
+    <a id="listing_category" href="{% url 'category_detail' category.id %}">{{ category.title }} >></a>
+    <ul id="ul_no_bullets">
+        <!-- loop through listings displaying only those that belong to this category -->
+        {% for listing in listings %}
+        {% if listing.category.id == category.id and listing.is_open %}
+            <!-- display image and open/enlarge in new window onclick-->
+            <li>
+                <ul id="ul_no_bullets">
+                    <li>
+                        <img id="image_thumbnail" src="{{ listing.image.url }}" alt="Listing Image" id="listing_img">
+                    </li>
+                    <li>
+                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
+                    </li>
+                    <li>
+                        ${{ listing.price }}
+                    </li>
+                    <li>
+                        Created: {{ listing.timestamp }}
+                    </li>
                 </ul>
-            </div>
+            </li>
         {% endif %}
-    {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endfor %}
 {% endblock %}

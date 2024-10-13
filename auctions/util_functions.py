@@ -3,7 +3,8 @@ from datetime import timedelta, datetime
 from django import views
 
 from django.shortcuts import render
-from .models import User, Auction_Listing, Bid, Category, Comment
+from .models import User, Auction_Listing, Bid, Category 
+# Comment
 
 
 def bid(user, listing_id, bid_amount):

@@ -12,7 +12,8 @@ from .models import Auction_Listing
 from django.db import transaction
 
 
-from .models import User, Auction_Listing, Bid, Category, Comment
+from .models import User, Auction_Listing, Bid, Category
+# , Comment
 from . import util_functions
 
 
@@ -87,7 +88,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 
 def index(request):
@@ -206,17 +206,16 @@ def listing_detail(request, listing_id):
     price = listing.price
     seller = listing.seller
     message = ""
+    bids = listing.bids.count()
 
     # unpack return values for countdown message and is_open state
-    time_remaining_message, is_expired = util_functions.get_time_remaining(listing.closing_time)
+    time_remaining_message, _ = util_functions.get_time_remaining(listing.closing_time)
 
     # close the auction if time has run out
     if (listing.has_ended() and listing.is_open):
         print("\n\n\n************** CLOSING THE AUCTION ************** \n\n\n\n")
         print(f"listing.hasended = {listing.has_ended}")
 
-        # seller just closed the auction - change closing time to now
-        # listing.closing_time = timezone.now() - timedelta(hours = 4)
         listing.close_auction()
         print("\n\n\n************** AUCTION is now CLOSED ************** \n\n\n\n")
 
@@ -247,9 +246,10 @@ def listing_detail(request, listing_id):
     return render(request, "auctions/listing_detail.html", {
         "listing": listing,
         "price": price,
+        "bids": bids,
         "seller":seller,
         "message": message,
-        "time_remaining_message": time_remaining_message
+        "time_remaining_message": time_remaining_message,
     })
 
 

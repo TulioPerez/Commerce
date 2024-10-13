@@ -3,70 +3,98 @@
 
 
 {% block body %}
-    <div>
-        <!-- display image and open/enlarge in new window onclick-->
-        <img src="{{ listing.image.url }}" alt="Listing Image" id="listing_img" 
-        onclick="window.open('{{ listing.image.url }}', '_blank', 'width=800', 'height=600');" 
-        style="cursor: pointer">
-    </div>
+<div>
+    <!-- display image and open/enlarge in new window onclick-->
+    <img src="{{ listing.image.url }}" alt="Listing Image" id="listing_img"
+        onclick="window.open('{{ listing.image.url }}', '_blank', 'width=800', 'height=600');" style="cursor: pointer">
+</div>
 
-    <div>
-        <h2>{{ listing.title }}</h2>
-        <!--if user is seller, show "Edit Auction" hyperlink  -->
-        {% if listing.seller.id == user.id %}
-            <a href="{% url 'sell' listing.id %}">Edit Listing</a>
-        {% endif %}
-    </div>
-    
-    <div>{{ listing.description }}</div>
-    <div>Listed: {{ listing.timestamp }}</div>
-    <!-- set message styling according to text in return value -->
-    {{ time_remaining_message }}
+<div>
+    <h2>{{ listing.title }}</h2>
+    <!--if user is seller, show "Edit Auction" hyperlink  -->
+    {% if listing.seller.id == user.id %}
+    <a href="{% url 'sell' listing.id %}">Edit Listing</a>
+    {% endif %}
+</div>
 
-    <!-- <div 
+<div>Listed: {{ listing.timestamp }}</div>
+<!-- set message styling according to text in return value -->
+{{ time_remaining_message }}
+
+<!-- <div 
     id="{% if 'Hurry!' in time_remaining %}closing_time_soon{% elif 'Auction Closed' in time_remaining %}closing_time_closed{% else %}closing_time_running{% endif %}">
         {{ time_remaining|localtime }}
     </div> -->
 
-    <div id="">
-        {% if listing.is_open %}
-            Current Bid: 
-        {% else %}
-            Ending Bid
-        {% endif %}
-        {{ listing.price }}
+<!-- price -->
+<div>
+    <div>
+        ${{ listing.price }}
     </div>
-
-
+    {% if listing.is_open %}
+    <div>
+        {{ bids }} bid(s) so far.
+        {% if listing.current_bid and listing.current_bid.user == user %}
+        {% if listing.current_bid.user == user %}
+        Yours is the current bid.
+        {% endif %}
+        {% endif %}
+    </div>
+    {% else %}
+        {% if listing.current_bid.user == user %}
+        Congratulations, you've won the auction!
+        {% endif %}
+    {% endif %}
+    
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
-        </div>
+    </div>
+    
     <div>
+        {% if not user.is_authenticated %}
+            Like this item? <a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}">login</a> in to place a bid!
+        {% endif %}
         <!-- watchlist & bid buttons appears if user is not seller-->
         {% if user.is_authenticated and listing.seller.id != user.id and listing.is_open %}
-
-            <!-- Bid Button -->
-            <form action="{% url 'listing_detail' listing.id %}" method="POST">
-                {% csrf_token %}
-                <label for="bid_amount" name="bid_amount">Place your bid! $</label>
-                <input type="number" id="bid_amount" name="bid_amount"step="0.01" min="0.01" required>
-                <button type="submit" name="action" value="bid">Place Bid</button>
-            </form>
-
-            <!-- watchlist button -->
-            <form action="{% url 'listing_detail' listing.id %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="listing_id" value="{{ listing.id }}">
-                <button type="submit" name="action" value="toggle_watchlist">
-                    {% if listing in user.watchlist.all %}
-                        Remove from Watchlist
-                    {% else %}
-                        Add to Watchlist
-                    {% endif %}
-                </button>
-            </form>
-
+    
+        <!-- Bid Button -->
+        <form action="{% url 'listing_detail' listing.id %}" method="POST">
+            {% csrf_token %}
+            <label for="bid_amount" name="bid_amount">Place your bid $</label>
+            <input type="number" id="bid_amount" name="bid_amount" step="0.01" min="0.01" required>
+            <button type="submit" name="action" value="bid">Place Bid</button>
+        </form>
+    
+        <!-- watchlist button -->
+        <form action="{% url 'listing_detail' listing.id %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+            <button type="submit" name="action" value="toggle_watchlist">
+                {% if listing in user.watchlist.all %}
+                    Remove from Watchlist
+                {% else %}
+                    Add to Watchlist
+                {% endif %}
+            </button>
+        </form>
+    
         {% endif %}
     </div>
+</div>
+
+<h4>Details:</h4>
+<ul>
+    <li>
+        Seller: {{ listing.seller }}
+    </li>
+    <li>
+        Category: {{ listing.category }}
+    </li>
+    {{ listing.description }}
+</ul>
+
+<h4>Comments:</h4>
+
+
 {% endblock %}

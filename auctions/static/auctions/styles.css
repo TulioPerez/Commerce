@@ -85,6 +85,15 @@ body {
     font-weight: bold;
   }
 
+  #image_thumbnail {
+    width: 150px;
+    height: 150px;
+  }
+
+  #ul_no_bullets {
+    list-style: none;
+  }
+
 
 
 

@@ -1,28 +1,19 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} {% block body %}
 
-{% block body %}
-    <h2>My Listings</h2>
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-    <div>
-        <ul>
-            {% for listing in listings %}
-                <li id="list">
-                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
-                    <div>
-                        Listed: {{ listing.timestamp }}
-                    </div>
-                    <div>
-                        &emsp;Closing time: {{ listing.closing_time }}
-                    </div>
-                    <div>
-                        &emsp;${{ listing.price }}
-                    </div>
-
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<h2>My Listings</h2>
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+<div>
+  <ul>
+    {% for listing in listings %}
+    <li id="list">
+      <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
+      <div>Listed: {{ listing.timestamp }}</div>
+      <div>&emsp;Closing time: {{ listing.closing_time }}</div>
+      <div>&emsp;${{ listing.price }}</div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}
-

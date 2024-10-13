@@ -1,19 +1,21 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} {% block body %}
 
-
-{% block body %}
-    <h2>{{ category.title }}</h2>
-    <ul>
-        {% for listing in listings %}
-            {% if listing.category == category %}
-                <li>
-                    <div id="listing_block">
-                        <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>                
-                    </div>
-                </li>
-            {% else %}
-                No listings in this category
-            {% endif %}
-        {% endfor %}
-    </ul>
+<h2>{{ category.title }}</h2>
+<ul id="ul_no_bullets">
+  {% for listing in listings %} {% if listing.category == category %}
+  <li id="list">
+    <div>
+      <img
+        id="image_thumbnail"
+        src="{{ listing.image.url }}"
+        alt="Listing Image"
+        id="listing_img"
+      />
+      &emsp;<a href="{% url 'listing_detail' listing.id %}"
+        >{{ listing.title }}</a
+      >
+    </div>
+  </li>
+  {% else %} No listings in this category {% endif %} {% endfor %}
+</ul>
 {% endblock %}

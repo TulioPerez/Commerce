@@ -2,8 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from django.contrib import admin
-
 from . import views
+
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -14,21 +14,16 @@ urlpatterns = [
     path("bids/", views.bids, name="bids"),
     path("watchlist/", views.watchlist, name="watchlist"),
     path("purchases/", views.purchases, name="purchases"),
-
     path("selling/", views.selling, name="selling"),
     path("sell/", views.sell, name="sell"),
-
     path("sell/<int:listing_id>/", views.sell, name="sell"),
-
     path("item/<int:listing_id>", views.listing_detail, name="listing_detail"),
-
     # category view for index page
     path("categories/<int:category_id>", views.categories, name="categories"),
     # category view for category list
     path("categories/", views.categories, name="categories"),
     path("category/<int:category_id>", views.category_detail, name="category_detail"),
 ]
-
 
 # for image rendering
 if settings.DEBUG:

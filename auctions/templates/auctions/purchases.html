@@ -1,24 +1,18 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} {% block body %}
 
-{% block body %}
-    <h2>Purchases</h2>
-
-    <div>
-        {% if user.is_authenticated %}
-            {% if purchases %}
-                <ul>
-                    {% for listing in purchases %}
-                    <li id="list">
-                        <a href="{% url 'listing_detail' listing.id  %}">{{ listing.title }}</a>
-                        <div>
-                            &emsp;Purchased for ${{ listing.price }} on {{ listing.closing_time }}
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                No purchases found.
-            {% endif %}
-        {% endif %}
-    </div>
+<h2>Purchases</h2>
+<div>
+  {% if user.is_authenticated %} {% if purchases %}
+  <ul>
+    {% for listing in purchases %}
+    <li id="list">
+      <a href="{% url 'listing_detail' listing.id  %}">{{ listing.title }}</a>
+      <div>
+        &emsp;Purchased for ${{ listing.price }} on {{ listing.closing_time }}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %} No purchases found. {% endif %} {% endif %}
+</div>
 {% endblock %}

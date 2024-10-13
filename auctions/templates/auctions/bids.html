@@ -1,27 +1,27 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} {% block body %}
 
-{% block body %}
-    <h2>Bids</h2>
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
+<h2>Bids</h2>
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
 
-    <!-- temp comments -->
-    <div>
-        {% if user.is_authenticated %}
-        <ul>
-            {% for bid in bids %}
-            <li>
-                <div>
-                    <a href="{% url 'listing_detail' bid.listing.id %}">{{ bid.listing.title }}  {{ bid.listing.closing_time }}</a>
-                </div>
-                <div id="list">
-                    &emsp;Bid date: {{ bid.timestamp }}<br>&emsp;Amount: ${{ bid.amount }}
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
+<div>
+  {% if user.is_authenticated %}
+  <ul>
+    {% for bid in bids %}
+    <li>
+      <div>
+        <a href="{% url 'listing_detail' bid.listing.id %}"
+          >{{ bid.listing.title }} {{ bid.listing.closing_time }}</a
+        >
+      </div>
+      <div id="list">
+        &emsp;Bid date: {{ bid.timestamp }}<br />&emsp;Amount: ${{ bid.amount }}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
 
 {% endblock %}

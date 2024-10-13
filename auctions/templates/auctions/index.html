@@ -1,45 +1,37 @@
 {% extends "auctions/layout.html" %}
-
 {% block body %}
-<h2>Active Listings</h2>
 
-<!-- loop through categories and sort them -->
+<h2>Active Listings</h2>
 {% for category in categories %}
 <!-- list category if auction items use it -->
 {% if category.listings.count > 0 %}
 <div id="listing_block">
-    <!-- display category name and link to its page -->
-    <a id="listing_category" href="{% url 'category_detail' category.id %}">{{ category.title }} >></a>
-    <ul id="ul_no_bullets">
-        <!-- loop through listings displaying only those that belong to this category -->
-        {% for listing in listings %}
-        {% if listing.category.id == category.id and listing.is_open %}
-        <!-- display image and open/enlarge in new window onclick-->
+  <!-- display category name and link to its page -->
+  <a id="listing_category" href="{% url 'category_detail' category.id %}">{{ category.title }} >></a>
+  <ul id="ul_no_bullets">
+    <!-- loop through listings, displaying only those related to category -->
+    {% for listing in listings %}
+      {% if listing.category.id == category.id and listing.is_open %}
+      <!-- display image and open/enlarge in new window when clicked -->
+      <a href="{% url 'listing_detail' listing.id %}">
         <li id="listing_container">
-            <div id="image_container">
-                <img id="image_thumbnail" src="{{ listing.image.url }}" alt="Listing Image" id="listing_img">
-            </div>
-            <ul id="ul_no_bullets">
-                <li>
-                    <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
-                </li>
-                <li>
-                    ${{ listing.price }}
-                </li>
-                <li>
-                    Created: {{ listing.timestamp }}
-                </li>
-                <li id="index_details">
-                    {{ listing.description }}
-                </li>
-                <li>
-                    Closing Time: {{ listing.closing_time }}
-                </li>
-            </ul>
+          <div id="image_container">
+            <img id="image_thumbnail" src="{{ listing.image.url }}" alt="Listing Image" id="listing_img" />
+          </div>
+          <ul id="ul_no_bullets">
+            <li>
+              <a href="{% url 'listing_detail' listing.id %}">{{ listing.title }}</a>
+            </li>
+            <li>${{ listing.price }}</li>
+            <li>Created: {{ listing.timestamp }}</li>
+            <li id="index_details">{{ listing.description }}</li>
+            <li>Closing Time: {{ listing.closing_time }}</li>
+          </ul>
         </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
+      </a>
+      {% endif %}
+    {% endfor %}
+  </ul>
 </div>
 {% endif %}
 {% endfor %}

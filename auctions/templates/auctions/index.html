@@ -1,6 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+{% block content %}
 <h2>Active Listings</h2>
 <!-- todo add \\ message div as in login / register if not logged in, and grey out "bid" button if available-->
 
@@ -38,4 +39,5 @@
 </div>
 {% endif %}
 {% endfor %}
+{% endblock %}
 {% endblock %}

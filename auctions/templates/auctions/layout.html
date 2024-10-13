@@ -2,68 +2,81 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>{% block title %}Auctions{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
-    </head>
-    <body>
-        <h1>Auctioneers</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
+
+<head>
+    <title>{% block title %}Auctions{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+    <!-- for responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!-- Responsive Header -->
+        <div class="row header-background">
+            <div class="col-12 col-md-8">
+                <h1>Auctioneers</h1>
+            </div>
+            <div class="col-12 col-md-4 d-flex justify-content-end align-items-center text-end">
+                {% if user.is_authenticated %}
+                    Signed in as <strong>{{ user.username }}</strong>
+                {% else %}
+                <div>
+                    <div>Not signed in.</div>
+                    <div class="mb-1">
+                        <a href="{% url 'login' %}">Login</a> or 
+                        <a href="{% url 'register' %}">Register Now!</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
-        <ul class="nav">
-            <!-- always show the following menu items -->
+
+        <!-- Responsive Navigation -->
+        <ul class="row nav">
+            <!-- Always show these menu items -->
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
             </li>
-            <li>
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'categories' %}">Categories</a>
             </li>
-            <!-- show menu items for registered users -->
+
+            <!-- Show menu items for registered users -->
             {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle">My Account</a>
-                        <ul class="dropdown-menu">
-                            <!-- admin link for superusers -->
-                            {% if user.is_superuser %}
-                                <a class="dropdown-item" href="/admin/">Admin</a>
-                            {% endif %}
-                            <li>
-                                <a class="dropdown-item" href="{% url 'watchlist' %}">Watchlist</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'selling' %}">My Listings</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bids' %}">My Bids</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'purchases' %}">My Purchases</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'sell' %}">Create a Listing</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
-                            </li>
-                        </ul>
-                </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">My Account</a>
+                <div class="dropdown-menu">
+                    <!-- Admin link for superusers -->
+                    {% if user.is_superuser %}
+                    <a class="dropdown-item" href="/admin/">Admin</a>
+                    {% endif %}
+                    <a class="dropdown-item" href="{% url 'watchlist' %}">Watchlist</a>
+                    <a class="dropdown-item" href="{% url 'selling' %}">My Listings</a>
+                    <a class="dropdown-item" href="{% url 'bids' %}">My Bids</a>
+                    <a class="dropdown-item" href="{% url 'purchases' %}">My Purchases</a>
+                    <a class="dropdown-item" href="{% url 'sell' %}">Create a Listing</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                </div>
+            </li>
             {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
             {% endif %}
         </ul>
-        <hr>
-        {% block body %}
-        {% endblock %}
-    </body>
+
+        <!-- Block for dynamic content -->
+        <div id="content_block">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </div>
+</body>
+
 </html>

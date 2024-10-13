@@ -1,106 +1,98 @@
 body {
-    padding: 10px;
+  background-color: #f8f9fa;
 }
 
-/* Basic styling for navigation */
-/* .nav {
-    list-style-type: none;
-    padding: 0;
-  } */
-  
-  /* .nav-item {
-    display: inline-block;
-    position: relative;
-  } */
-  
-  /* menu styling */
-  .nav-link {
-    text-decoration: none;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #f8f9fa;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .dropdown-menu li {
-    display: block;
-  }
-  
-  .nav-item:hover .dropdown-menu {
-    display: block;
-  }
-  
-  .dropdown-menu li a:hover {
-    background-color: #e9ecef;
-  }
+.header-background {
+  background-color: #003366;
+  color: white;
+  padding: 10px 25px;
+}
 
-  #listing_block {
-    margin: 20px;
-    /* margin: 20px 20px; */
-  }
+.text-md-right {
+  text-align: right;
+}
 
-  #listing_category {
-    margin-left: 0px;
-  }
-  
-  #listing_title {
-    margin-left: 20px;
-  }
+#login_or_register {
+  font-size: small;
+  /* display: inline; */
+}
 
-  #listing_description {
-    margin-left: 20px;
-  }
+.nav {
+  margin-bottom: 20px;
+  padding: 0px 25px;
+  background-color: rgb(233, 233, 233);
+}
 
-  #listing_price {
-    margin-left: 20px;
-  }
+/* menu styling */
+.nav-link {
+  text-decoration: none;
+  padding: 0 10px;
+  border-radius: 5px;
+}
 
-  #listing_img {
-    max-width: 400px;
-    height: auto;
-  }
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #f8f9fa;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-  #closing_time_soon {
-    font-weight: bold;
-    color: red;
-  }
+.dropdown-menu li {
+  display: block;
+}
 
-  #closing_time_running {
-    font-weight: bold;
-    color: green;
-  }
+.nav-item:hover .dropdown-menu {
+  display: block;
+}
 
-  #closing_time_closed {
-    font-weight: bold;
-  }
+.dropdown-menu li a:hover {
+  background-color: #e9ecef;
+}
 
-  #image_thumbnail {
-    width: 150px;
-    height: 150px;
-  }
+#content_block {
+  padding: 5px 25px;
+}
 
-  #ul_no_bullets {
-    list-style: none;
-  }
+#listing_block {
+  margin: 20px;
+}
 
+#listing_title,
+#listing_description,
+#listing_price {
+  margin-left: 20px;
+}
 
+#listing_img {
+  max-width: 400px;
+  height: auto;
+}
 
+#closing_time_soon {
+  font-weight: bold;
+  color: red;
+}
 
-  
-  /* .dropdown-menu li a {
-    padding: 10px;
-    text-decoration: none;
-    display: block;
-    color: #333;
-  } */
+#closing_time_running {
+  font-weight: bold;
+  color: green;
+}
+
+#closing_time_closed {
+  font-weight: bold;
+}
+
+#image_thumbnail {
+  width: 150px;
+  height: 150px;
+}
+
+#ul_no_bullets {
+  list-style: none;
+}

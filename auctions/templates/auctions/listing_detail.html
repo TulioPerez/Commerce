@@ -31,56 +31,56 @@
     <div>
         ${{ listing.price }}
     </div>
-    {% if listing.is_open %}
     <div>
-        {{ bids }} bid(s) so far.
+        {{ bids }} bid(s).
         {% if listing.current_bid and listing.current_bid.user == user %}
         {% if listing.current_bid.user == user %}
-        Yours is the current bid.
+        Yours is the highest bid.
         {% endif %}
         {% endif %}
     </div>
-    {% else %}
-        {% if listing.current_bid.user == user %}
-        Congratulations, you've won the auction!
-        {% endif %}
+    {% if not listing.is_open %}
+    {% if listing.current_bid.user == user %}
+    Congratulations, you've won the auction!
     {% endif %}
-    
+    {% endif %}
+
     {% if message %}
-        <div>{{ message }}</div>
+    <div>{{ message }}</div>
     {% endif %}
-    </div>
-    
-    <div>
-        {% if not user.is_authenticated %}
-            Like this item? <a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}">login</a> in to place a bid!
-        {% endif %}
-        <!-- watchlist & bid buttons appears if user is not seller-->
-        {% if user.is_authenticated and listing.seller.id != user.id and listing.is_open %}
-    
-        <!-- Bid Button -->
-        <form action="{% url 'listing_detail' listing.id %}" method="POST">
-            {% csrf_token %}
-            <label for="bid_amount" name="bid_amount">Place your bid $</label>
-            <input type="number" id="bid_amount" name="bid_amount" step="0.01" min="0.01" required>
-            <button type="submit" name="action" value="bid">Place Bid</button>
-        </form>
-    
-        <!-- watchlist button -->
-        <form action="{% url 'listing_detail' listing.id %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="listing_id" value="{{ listing.id }}">
-            <button type="submit" name="action" value="toggle_watchlist">
-                {% if listing in user.watchlist.all %}
-                    Remove from Watchlist
-                {% else %}
-                    Add to Watchlist
-                {% endif %}
-            </button>
-        </form>
-    
-        {% endif %}
-    </div>
+</div>
+
+<div>
+    {% if not user.is_authenticated %}
+    Like this item? <a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}">login</a> in to place a
+    bid!
+    {% endif %}
+    <!-- watchlist & bid buttons appears if user is not seller-->
+    {% if user.is_authenticated and listing.seller.id != user.id and listing.is_open %}
+
+    <!-- Bid Button -->
+    <form action="{% url 'listing_detail' listing.id %}" method="POST">
+        {% csrf_token %}
+        <label for="bid_amount" name="bid_amount">Place your bid $</label>
+        <input type="number" id="bid_amount" name="bid_amount" step="0.01" min="0.01" required>
+        <button type="submit" name="action" value="bid">Place Bid</button>
+    </form>
+
+    <!-- watchlist button -->
+    <form action="{% url 'listing_detail' listing.id %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="listing_id" value="{{ listing.id }}">
+        <button type="submit" name="action" value="toggle_watchlist">
+            {% if listing in user.watchlist.all %}
+            Remove from Watchlist
+            {% else %}
+            Add to Watchlist
+            {% endif %}
+        </button>
+    </form>
+
+    {% endif %}
+</div>
 </div>
 
 <h4>Details:</h4>
@@ -98,21 +98,21 @@
 <h4>Add a comment:</h4>
 <form action="{% url 'listing_detail' listing.id %}" method="POST">
     {% csrf_token %}
-    {{ comment_form.as_p }}  <!-- Render the form fields -->
+    {{ comment_form.as_p }} <!-- Render the form fields -->
     <button type="submit" name="action" value="submit_comment">Submit Comment</button>
 </form>
 <div>
     <ul>
         {% if listing.comments %}
         Previous Comments:
-            {% for comment in comments %}
-            <li>
-                {{ comment.content }} 
-                <p>
-                    - by {{ comment.user.username }} on {{ comment.timestamp|localtime }}
-                </p>
-            </li>
-            {% endfor %}
+        {% for comment in comments %}
+        <li>
+            {{ comment.content }}
+            <p>
+                - by {{ comment.user.username }} on {{ comment.timestamp|localtime }}
+            </p>
+        </li>
+        {% endfor %}
         {% endif %}
     </ul>
 </div>

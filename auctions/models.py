@@ -43,10 +43,10 @@ class Auction_Listing(models.Model):
     def close_auction(self):
         with transaction.atomic():
             self.is_open = False
-            self.save()    
+            self.save()
 
-            print(f"BID BID BID = {self.current_bid}\n\n USER USER USER = {self.current_bid.user}")
             if self.current_bid:
+                # print(f"BID BID BID = {self.current_bid}\n\n USER USER USER = {self.current_bid.user}")
                 user = self.current_bid.user
                 user.purchases.add(self)
                 user.save()
